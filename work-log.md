@@ -12,7 +12,7 @@ Monday:
 
 -Checking with business, discussing any additional requirements to v1.0
 
--Create presentable v1.0, add any bonus QoL features (tests, CI, etc.)
+-Create presentable v1.0, add any bonus QoL features (tests, CI, swagger, etc.)
 
 Tuesday:
 
