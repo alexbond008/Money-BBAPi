@@ -23,3 +23,12 @@ Tuesday:
 Wednesday:
 
 -Finalise and practise the presentatiom
+
+
+#Meeting 1 - MVP
+
+Items - stocks (+cash)
+Favcourite stock exchange - NYSE(?)
+Most important elemnt - total worth of portfolio
+Currency - $$
+Frequency of historical data - adjustable
