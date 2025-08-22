@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.bbapi.money_api.entity.StockPrice;
 @Repository
-public interface StockPriceRepository extends JpaRepository<StockPrice, Long> {
+public interface StockPriceRepository extends JpaRepository<Long,StockPrice> {
     
 }
