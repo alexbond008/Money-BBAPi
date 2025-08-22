@@ -5,6 +5,8 @@ import java.util.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 @IdClass(HistoryItemId.class)
@@ -14,6 +16,7 @@ public class HistoryItem {
     private Integer quantity;
     private Integer price;
     @Id
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
 
     public HistoryItem() {
