@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed" data-theme="theme-default" data-assets-path="/" data-template="vertical-menu-template">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Money-BBAPi — Admin</title>
+  <meta name="description" content="Money-BBAPi admin UI starter powered by Sneat Bootstrap 5" />
+  <!-- Sneat Free (via jsDelivr) -->
+  <!-- NOTE: If you purchase PRO, replace these with PRO assets -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/css/core.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/css/theme-default.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/css/demo.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/libs/apex-charts/apex-charts.css">
+  <style>
+    /* Project-specific tweaks */
+    .brand-text { font-weight: 700; letter-spacing: .3px; }
+    .nav-link[disabled]{ pointer-events:none; opacity:.45 }
+    .table thead th { white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <!-- Layout wrapper -->
+  <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+      <!-- Sidebar -->
+      <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <div class="app-brand demo px-3 py-2">
+          <a href="#/" class="app-brand-link">
+            <span class="app-brand-logo demo"><i class='bx bxs-bank bx-sm'></i></span>
+            <span class="app-brand-text demo menu-text fw-bolder ms-2 brand-text">Money‑BBAPi</span>
+          </a>
+        </div>
+        <ul class="menu-inner py-1">
+          <li class="menu-item active"><a href="#/" class="menu-link"><i class='menu-icon bx bxs-dashboard'></i><div>Dashboard</div></a></li>
+          <li class="menu-header small text-uppercase"><span class="menu-header-text">Portfolio</span></li>
+          <li class="menu-item"><a href="#/portfolios" class="menu-link"><i class='menu-icon bx bxs-briefcase'></i><div>Portfolios</div></a></li>
+          <li class="menu-item"><a href="#/accounts" class="menu-link"><i class='menu-icon bx bxs-wallet'></i><div>Accounts</div></a></li>
+          <li class="menu-item"><a href="#/holdings" class="menu-link"><i class='menu-icon bx bxs-pie-chart-alt-2'></i><div>Holdings</div></a></li>
+          <li class="menu-item"><a href="#/transactions" class="menu-link"><i class='menu-icon bx bxs-transfer-alt'></i><div>Transactions</div></a></li>
+          <li class="menu-item"><a href="#/orders" class="menu-link"><i class='menu-icon bx bxs-cart-add'></i><div>Orders</div></a></li>
+          <li class="menu-item"><a href="#/categories" class="menu-link"><i class='menu-icon bx bxs-category'></i><div>Categories</div></a></li>
+          <li class="menu-item"><a href="#/budgets" class="menu-link"><i class='menu-icon bx bxs-spreadsheet'></i><div>Budgets</div></a></li>
+          <li class="menu-item"><a href="#/reports" class="menu-link"><i class='menu-icon bx bxs-report'></i><div>Reports</div></a></li>
+          <li class="menu-header small text-uppercase"><span class="menu-header-text">System</span></li>
+          <li class="menu-item"><a href="#/users" class="menu-link"><i class='menu-icon bx bxs-user-detail'></i><div>Users</div></a></li>
+          <li class="menu-item"><a href="#/settings" class="menu-link"><i class='menu-icon bx bxs-cog'></i><div>Settings</div></a></li>
+          <li class="menu-item"><a href="#/docs" class="menu-link"><i class='menu-icon bx bxs-book-alt'></i><div>API Docs</div></a></li>
+          <li class="menu-item"><a href="#/auth" class="menu-link"><i class='menu-icon bx bxs-lock-alt'></i><div>Auth</div></a></li>
+        </ul>
+      </aside>
+
+      <!-- Layout page -->
+      <div class="layout-page">
+        <!-- Navbar -->
+        <nav class="layout-navbar navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+          <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-4" href="#"><i class="bx bx-menu bx-sm"></i></a>
+          </div>
+          <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+            <div class="navbar-nav align-items-center">
+              <div class="nav-item d-flex align-items-center"><i class="bx bx-search fs-4 me-2"></i>
+                <input id="globalSearch" type="text" class="form-control border-0 shadow-none" placeholder="Search… (accounts, tickers, tx)" />
+              </div>
+            </div>
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown"><i class='bx bx-bell bx-sm'></i><span class="badge bg-danger rounded-pill">3</span></a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#/reports">3 new reports generated</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown user-dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"><div class="avatar avatar-online"><img src="https://i.pravatar.cc/40" class="rounded-circle" alt=""/></div></a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li><a class="dropdown-item" href="#/users"><i class='bx bx-user me-2'></i> My Profile</a></li>
+                  <li><a class="dropdown-item" href="#/settings"><i class='bx bx-cog me-2'></i> Settings</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a class="dropdown-item" href="#/auth"><i class='bx bx-log-out me-2'></i> Sign out</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Content wrapper -->
+        <div class="content-wrapper">
+          <div class="container-xxl flex-grow-1 container-p-y" id="appRoot">
+            <!-- View gets injected here by router() -->
+          </div>
+          <footer class="content-footer footer bg-footer-theme">
+            <div class="container-xxl d-flex justify-content-between py-2 flex-md-row flex-column">
+              <div>© <span id="year"></span> Money‑BBAPi</div>
+              <div class="d-none d-md-inline">Built with <a href="https://themeselection.com" target="_blank">Sneat</a> & Bootstrap</div>
+            </div>
+          </footer>
+          <div class="content-backdrop fade"></div>
+        </div>
+      </div>
+    </div>
+    <div class="layout-overlay layout-menu-toggle"></div>
+    <div class="drag-target"></div>
+  </div>
+
+  <!-- Offcanvas: Create Transaction (example of endpoint wiring) -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasTx" aria-labelledby="offcanvasTxLabel">
+    <div class="offcanvas-header">
+      <h5 id="offcanvasTxLabel" class="offcanvas-title">New Transaction</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <form id="txForm" class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Account</label>
+          <select class="form-select" name="accountId" required>
+            <option selected disabled value="">Choose…</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Category</label>
+          <select class="form-select" name="category" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+            <option value="transfer">Transfer</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Amount</label>
+          <input class="form-control" type="number" step="0.01" name="amount" required />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Date</label>
+          <input class="form-control" type="date" name="date" required />
+        </div>
+        <div class="col-12">
+          <label class="form-label">Notes</label>
+          <input class="form-control" name="notes" placeholder="Optional" />
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button class="btn btn-primary" type="submit"><i class='bx bx-save me-1'></i>Save</button>
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="offcanvas">Cancel</button>
+        </div>
+      </form>
+      <div class="alert alert-success d-none mt-3" id="txSuccess">Saved! (stub)</div>
+    </div>
+  </div>
+
+  <!-- Vendors -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/js/menu.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <script>
+    // --- basic utilities ---
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+    const routes = {};
+    const register = (path, render) => routes[path] = render;
+    const navigate = (path) => { window.location.hash = path; };
+
+    window.addEventListener('hashchange', router);
+    window.addEventListener('load', () => { $('#year').textContent = new Date().getFullYear(); router(); });
+
+    function router(){
+      const path = window.location.hash.replace('#','') || '/';
+      $$('.menu .menu-item').forEach(li => li.classList.remove('active'));
+      const active = $(`.menu a[href="#${path}"]`);
+      if (active) active.closest('.menu-item').classList.add('active');
+      const view = routes[path] || routes['/404'];
+      $('#appRoot').innerHTML = view?.() || '';
+      if (window.onViewRendered) window.onViewRendered(path);
+    }
+
+    // --- demo data (replace with real API calls to Money-BBAPi) ---
+    const api = {
+      baseUrl: "/api", // TODO: point to your backend host/port
+      async listAccounts(){
+        // return fetch(`${this.baseUrl}/accounts`).then(r=>r.json());
+        return [
+          { id: 1, name: 'Brokerage - IBKR', type: 'Brokerage', currency: 'USD', balance: 12543.77 },
+          { id: 2, name: 'Savings - AIB', type: 'Bank', currency: 'EUR', balance: 4820.12 },
+        ];
+      },
+      async listTransactions(){
+        return [
+          { id: 501, date: '2025-08-01', account: 'AIB', category:'Expense', amount: -35.90, note:'Groceries' },
+          { id: 502, date: '2025-08-03', account: 'IBKR', category:'Trade', amount: -2000.00, note:'AAPL BUY' },
+          { id: 503, date: '2025-08-10', account: 'AIB', category:'Income', amount: 2900.00, note:'Salary' },
+        ];
+      },
+      async listPortfolios(){
+        return [ { id: 'P-001', name:'Core', value: 25670.12, pnl: +4.2 }, { id:'P-002', name:'Growth', value: 11890.33, pnl: -1.1 } ];
+      }
+    };
+
+    // --- reusable widgets ---
+    function card(title, body, extra=""){
+      return `<div class="card h-100">\n<div class="card-header d-flex justify-content-between align-items-center">\n<h5 class="card-title m-0">${title}</h5>${extra}</div>\n<div class="card-body">${body}</div>\n</div>`;
+    }
+
+    // --- views ---
+    register('/', () => `
+      <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">${card('Total Balance', `<h3 class="mb-1">€ 17,363.89</h3><small class="text-muted">Across 2 accounts</small>`, '<span class="badge bg-label-success">+2.1% MoM</span>')}</div>
+        <div class="col-sm-6 col-xl-3">${card('Invested', `<h3 class="mb-1">$ 12,543.77</h3><small class="text-muted">Brokerage</small>`)}</div>
+        <div class="col-sm-6 col-xl-3">${card('Cash', `<h3 class="mb-1">€ 4,820.12</h3><small class="text-muted">Bank</small>`)}</div>
+        <div class="col-sm-6 col-xl-3">${card('PnL (30d)', `<h3 class="mb-1">+€ 382.10</h3><small class="text-success">+2.24%</small>`)}</div>
+      </div>
+      <div class="row g-4 mt-1">
+        <div class="col-xl-8">
+          ${card('Performance', `<div id="chartPerf"></div>`, '<button class="btn btn-sm btn-outline-secondary" onclick="renderPerf()"><i class=\'bx bx-refresh\'></i></button>')}
+        </div>
+        <div class="col-xl-4">
+          ${card('Recent Transactions', `<div id="recentTx"></div>`, '<a class="btn btn-sm btn-primary" href=\"#/transactions\">View all</a>')}
+        </div>
+      </div>
+    `);
+
+    register('/accounts', () => `
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Accounts</h4>
+        <div>
+          <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTx"><i class='bx bx-plus me-1'></i>New Transaction</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0" id="accountsTable">
+            <thead class="table-light"><tr><th>Name</th><th>Type</th><th>Currency</th><th class="text-end">Balance</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    `);
+
+    register('/transactions', () => `
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Transactions</h4>
+        <div class="d-flex gap-2">
+          <input id="txSearch" class="form-control form-control-sm" placeholder="Filter…" style="max-width:240px">
+          <button class="btn btn-sm btn-outline-secondary" onclick="exportCsv('txTable')"><i class='bx bx-download me-1'></i>Export</button>
+          <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTx"><i class='bx bx-plus me-1'></i>Add</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-striped" id="txTable">
+            <thead class="table-light"><tr><th>Date</th><th>Account</th><th>Category</th><th class="text-end">Amount</th><th>Note</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    `);
+
+    register('/portfolios', () => `
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Portfolios</h4>
+        <button class="btn btn-sm btn-outline-secondary" onclick="renderPerf()"><i class='bx bx-line-chart'></i></button>
+      </div>
+      <div class="row g-4" id="portRows"></div>
+    `);
+
+    register('/holdings', () => `
+      <div class="d-flex justify-content-between align-items-center mb-3"><h4 class="mb-0">Holdings</h4>
+      <div><button class="btn btn-sm btn-outline-secondary" disabled>Import</button></div></div>
+      <div class="card">${card('Positions', `<div class='text-muted'>Hook up to /holdings endpoint</div>`)}</div>
+    `);
+
+    register('/orders', () => `<div class="card p-4">Order ticket UI stub — integrate with /orders later.</div>`);
+    register('/categories', () => `<div class="card p-4">Categories manager stub.</div>`);
+    register('/budgets', () => `<div class="card p-4">Budgets planner stub.</div>`);
+    register('/reports', () => `<div class="card p-4">Reports hub stub (PDF/CSV exports, charts).</div>`);
+    register('/settings', () => `<div class="card p-4">Environment, currencies, sync schedules, webhooks…</div>`);
+    register('/users', () => `<div class="card p-4">Users & roles management stub.</div>`);
+    register('/docs', () => `<div class="card p-4">Link your Swagger / OpenAPI once exposed by the API.</div>`);
+    register('/auth', () => `<div class="row g-4"><div class="col-md-5 mx-auto"><div class="card p-4">Login/Signup screens go here.</div></div></div>`);
+    register('/404', () => `<div class="text-center py-5"><h1 class="display-6">404</h1><p class="text-muted">Page not found</p></div>`);
+
+    // --- view lifecycle hook ---
+    window.onViewRendered = async (path) => {
+      if(path === '/' ){ renderPerf(); renderRecentTx(); }
+      if(path === '/accounts'){ renderAccounts(); }
+      if(path === '/transactions'){ renderTxTable(); }
+      if(path === '/portfolios'){ renderPortfolios(); }
+    };
+
+    // --- renderers ---
+    async function renderAccounts(){
+      const data = await api.listAccounts();
+      const tbody = $('#accountsTable tbody');
+      tbody.innerHTML = data.map(a => `
+        <tr>
+          <td>${a.name}</td>
+          <td>${a.type}</td>
+          <td>${a.currency}</td>
+          <td class="text-end">${fmt(a.balance, a.currency)}</td>
+          <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="#/transactions">View tx</a></td>
+        </tr>`).join('');
+
+      // populate account select in tx form
+      const sel = $('#txForm select[name="accountId"]');
+      sel.innerHTML = '<option selected disabled value="">Choose…</option>' + data.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+    }
+
+    async function renderTxTable(){
+      const rows = await api.listTransactions();
+      const tbody = $('#txTable tbody');
+      tbody.innerHTML = rows.map(t => `
+        <tr>
+          <td>${t.date}</td>
+          <td>${t.account}</td>
+          <td>${t.category}</td>
+          <td class="text-end ${t.amount<0? 'text-danger':'text-success'}">${fmt(t.amount, 'EUR')}</td>
+          <td>${t.note||''}</td>
+        </tr>`).join('');
+      $('#txSearch').addEventListener('input', (e)=> filterTable('txTable', e.target.value));
+    }
+
+    async function renderPortfolios(){
+      const data = await api.listPortfolios();
+      const el = $('#portRows');
+      el.innerHTML = data.map(p => `
+        <div class="col-md-6">
+          <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="m-0">${p.name}</h5>
+              <span class="badge ${p.pnl>=0? 'bg-label-success':'bg-label-danger'}">${p.pnl}%</span>
+            </div>
+            <div class="card-body">
+              <div class="fs-4 fw-bold mb-2">${fmt(p.value, 'EUR')}</div>
+              <div id="chart-${p.id}" style="min-height: 160px"></div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      // small spark charts
+      data.forEach(p => {
+        new ApexCharts(document.querySelector(`#chart-${p.id}`), {
+          chart: { type: 'area', height: 160, sparkline: { enabled: true } },
+          series: [{ data: genSeries() }],
+          stroke: { curve: 'smooth', width: 2 },
+          tooltip: { enabled: false },
+          fill: { opacity: .25 },
+        }).render();
+      });
+    }
+
+    function renderPerf(){
+      const s = [10,12,11,13,12,15,16,15,18,19,21,22].map((v,i)=>({x:i,y:v}));
+      const chart = new ApexCharts(document.querySelector('#chartPerf'), {
+        chart: { type: 'line', height: 300, toolbar: { show: false } },
+        series: [{ name:'NAV', data: s }],
+        xaxis: { labels: { show: false } },
+        yaxis: { labels: { formatter: (v)=> '€'+v } },
+        stroke: { curve: 'smooth', width: 3 },
+        grid: { borderColor: 'rgba(0,0,0,.06)' }
+      });
+      $('#chartPerf').innerHTML = '';
+      chart.render();
+    }
+
+    async function renderRecentTx(){
+      const rows = (await api.listTransactions()).slice(0,6);
+      const wrap = $('#recentTx');
+      wrap.innerHTML = rows.map(t => `
+        <div class="d-flex justify-content-between border-bottom py-2">
+          <div><span class="fw-medium">${t.date}</span> — ${t.account}</div>
+          <div class="text-end ${t.amount<0? 'text-danger':'text-success'}">${fmt(t.amount, 'EUR')}</div>
+        </div>`).join('');
+    }
+
+    // --- helpers ---
+    function fmt(amount, ccy){
+      try { return new Intl.NumberFormat(undefined,{ style:'currency', currency: ccy||'EUR'}).format(amount); }
+      catch { return (amount<0?'-':'') + (ccy||'') + Math.abs(amount).toFixed(2) }
+    }
+    function filterTable(tableId, q){
+      const rows = $$('#'+tableId+' tbody tr');
+      rows.forEach(r => r.style.display = r.innerText.toLowerCase().includes(q.toLowerCase()) ? '' : 'none');
+    }
+    function exportCsv(tableId){
+      const rows = [['Date','Account','Category','Amount','Note'], ...$$('#'+tableId+' tbody tr').map(tr => Array.from(tr.children).map(td=>td.innerText))];
+      const csv = rows.map(r => r.map(v => '"'+v.replaceAll('"','\"')+'"').join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'transactions.csv'; a.click();
+    }
+    function genSeries(){
+      let v = 100; const data=[]; for(let i=0;i<24;i++){ v += (Math.random()-.4)*4; data.push(Math.round(v)); } return data;
+    }
+
+    // --- submit handlers (stubbed) ---
+    $('#txForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const payload = Object.fromEntries(form.entries());
+      console.log('POST /transactions (stub)', payload);
+      // await fetch(`${api.baseUrl}/transactions`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      $('#txSuccess').classList.remove('d-none');
+      setTimeout(()=> $('#txSuccess').classList.add('d-none'), 2500);
+    });
+  </script>
+</body>
+</html>
