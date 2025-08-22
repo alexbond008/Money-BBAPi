@@ -1,7 +1,9 @@
 package com.bbapi.money_api.controller;
 
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +38,9 @@ public class StockPriceController {
         return stockPriceService.getAllStockPrices();
     }
 
-    @GetMapping("/{id}")
-    public StockPrice getStockPriceById(@RequestParam StockPriceId id) {
-        return stockPriceService.getStockPriceById(id);
+    @GetMapping("/{ticker}/{timestamp}")
+    public StockPrice getStockPriceById(@PathVariable String ticker, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date timestamp) {
+        return stockPriceService.getStockPriceById(ticker, timestamp);
     }
 
     @PostMapping()

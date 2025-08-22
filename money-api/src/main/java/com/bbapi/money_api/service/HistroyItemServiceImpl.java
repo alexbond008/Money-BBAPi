@@ -23,8 +23,8 @@ public class HistroyItemServiceImpl implements HistoryItemService {
         return historyItemRepository.findAll();
     }
     @Override
-    public HistoryItem getHistoryItemById(HistoryItemId id) {
-        return historyItemRepository.findById(id).orElse(null);
+    public HistoryItem getHistoryItemById(String ticker, Date timestamp) {
+        return historyItemRepository.findById(ticker, timestamp);
     }
 
     @Override

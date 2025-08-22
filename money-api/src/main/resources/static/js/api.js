@@ -1,19 +1,19 @@
-// API abstraction (stubbed)
-export const api = {
-  baseUrl: '/api',
-  async listTransactions(){
-    return [
-      { id: 501, date: '2025-08-01', account: 'AIB', category:'Expense', amount: -35.90, note:'Groceries' },
-      { id: 502, date: '2025-08-03', account: 'IBKR', category:'Trade', amount: -2000.00, note:'AAPL BUY' },
-      { id: 503, date: '2025-08-10', account: 'AIB', category:'Income', amount: 2900.00, note:'Salary' },
-    ];
-  },
-  async listPortfolios(){
-    return [
-      { id: 'P-001', name:'Core', value: 25670.12, pnl: +4.2 },
-      { id:'P-002', name:'Growth', value: 11890.33, pnl: -1.1 }
-    ];
-  },
-  // TODO real fetch examples:
-  // async fetchPositions(){ return fetch(`${this.baseUrl}/portfolio`).then(r=>r.json()); }
-};
+// Minimal API module: only what is needed for HistoryItem table
+export async function fetchHistoryItems() {
+  const resp = await fetch('/historyItem', { headers: { Accept: 'application/json' } });
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  const data = await resp.json();
+  return Array.isArray(data) ? data : [data];
+}
+
+
+// OPTIONAL: mapper if price is in cents
+export function mapHistoryItem(raw){
+  return {
+    timestamp: raw.timestamp,
+    ticker: raw.ticker,
+    quantity: raw.quantity,
+    // adjust if raw.price is in cents:
+    price: raw.price >= 1000 ? raw.price / 100 : raw.price
+  };
+}
