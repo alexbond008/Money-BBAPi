@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bbapi.money_api.helper_classes.PortfolioItem;
 import com.bbapi.money_api.service.PortfolioService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @CrossOrigin
