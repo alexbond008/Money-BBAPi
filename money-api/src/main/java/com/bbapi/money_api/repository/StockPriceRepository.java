@@ -1,5 +1,10 @@
 package com.bbapi.money_api.repository;
 
-public interface StockPriceRepository {
+import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.bbapi.money_api.entity.StockPrice;
+@Repository
+public interface StockPriceRepository extends JpaRepository<StockPrice, Long> {
     
 }
