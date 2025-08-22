@@ -3,10 +3,15 @@ package com.bbapi.money_api.entity;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 @Entity
+@IdClass(StockPriceId.class)
 public class StockPrice {    
     private Integer price;
+    @Id
     private String ticker;
+    @Id
     private Date timestamp;
 
     public StockPrice() {
