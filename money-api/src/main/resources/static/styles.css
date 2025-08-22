@@ -1,0 +1,30 @@
+/* Project styles */
+:root {
+  --nav-accent: #7367f0;
+  --card-border: rgba(0,0,0,.06);
+}
+html, body {
+  scroll-behavior: smooth;
+}
+.brand-text { font-weight:700; letter-spacing:.3px; }
+.nav-link[disabled]{ pointer-events:none; opacity:.45 }
+.table thead th { white-space:nowrap; }
+.table td, .table th { vertical-align: middle; }
+.badge { letter-spacing:.25px; }
+#chartPerf, [id^="chart-"] { width:100%; }
+.card-header .btn.btn-sm { padding: .25rem .5rem; }
+.offcanvas form .form-label { font-size:.8rem; text-transform:uppercase; letter-spacing:.5px; }
+.offcanvas .alert { font-size:.8rem; }
+.text-success { color:#28c76f !important; }
+.text-danger { color:#ea5455 !important; }
+.bg-label-success { background:rgba(40,199,111,.12)!important; color:#28c76f!important; }
+.bg-label-danger { background:rgba(234,84,85,.12)!important; color:#ea5455!important; }
+.badge.bg-label-success, .badge.bg-label-danger { font-weight:600; }
+a { text-decoration:none; }
+.footer a { text-decoration:underline; }
+#recentTx .border-bottom:last-child { border-bottom:0 !important; }
+#txSearch { font-size:.8rem; }
+.table-striped tbody tr:nth-of-type(odd) { background-color: rgba(0,0,0,.015); }
+@media (max-width: 992px) {
+  .layout-menu { box-shadow: 0 0 0 1px var(--card-border); }
+}
