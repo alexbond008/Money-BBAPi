@@ -15,12 +15,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/css/demo.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/libs/apex-charts/apex-charts.css">
-  <style>
-    /* Project-specific tweaks */
-    .brand-text { font-weight: 700; letter-spacing: .3px; }
-    .nav-link[disabled]{ pointer-events:none; opacity:.45 }
-    .table thead th { white-space: nowrap; }
-  </style>
+  <!-- Custom project styles -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <!-- Layout wrapper -->
@@ -39,10 +35,9 @@
           <li class="menu-header small text-uppercase"><span class="menu-header-text">Portfolio</span></li>
           <li class="menu-item"><a href="#/portfolios" class="menu-link"><i class='menu-icon bx bxs-briefcase'></i><div>Portfolios</div></a></li>
           <li class="menu-item"><a href="#/holdings" class="menu-link"><i class='menu-icon bx bxs-pie-chart-alt-2'></i><div>Holdings</div></a></li>
-          <li class="menu-item"><a href="#/transactions" class="menu-link"><i class='menu-icon bx bxs-transfer-alt'></i><div>Transactions</div></a></li>
+          <li class="menu-item"><a href="#/transactions" class="menu-link"><i class='menu-icon bx bxs-spreadsheet'></i><div>Transactions</div></a></li>
           <li class="menu-item"><a href="#/orders" class="menu-link"><i class='menu-icon bx bxs-cart-add'></i><div>Orders</div></a></li>
           <li class="menu-item"><a href="#/categories" class="menu-link"><i class='menu-icon bx bxs-category'></i><div>Categories</div></a></li>
-          <li class="menu-item"><a href="#/budgets" class="menu-link"><i class='menu-icon bx bxs-spreadsheet'></i><div>Budgets</div></a></li>
           <li class="menu-item"><a href="#/reports" class="menu-link"><i class='menu-icon bx bxs-report'></i><div>Reports</div></a></li>
           <li class="menu-header small text-uppercase"><span class="menu-header-text">System</span></li>
           <li class="menu-item"><a href="#/settings" class="menu-link"><i class='menu-icon bx bxs-cog'></i><div>Settings</div></a></li>
@@ -151,214 +146,11 @@
   <script src="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sneat-bootstrap-html-admin-template-free@1.0.0/assets/vendor/js/menu.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-  <script>
-    // --- basic utilities ---
-    const $ = (sel, root=document) => root.querySelector(sel);
-    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
-    const routes = {};
-    const register = (path, render) => routes[path] = render;
-    const navigate = (path) => { window.location.hash = path; };
-
-    window.addEventListener('hashchange', router);
-    window.addEventListener('load', () => { $('#year').textContent = new Date().getFullYear(); router(); });
-
-    function router(){
-      const path = window.location.hash.replace('#','') || '/';
-      $$('.menu .menu-item').forEach(li => li.classList.remove('active'));
-      const active = $(`.menu a[href="#${path}"]`);
-      if (active) active.closest('.menu-item').classList.add('active');
-      const view = routes[path] || routes['/404'];
-      $('#appRoot').innerHTML = view?.() || '';
-      if (window.onViewRendered) window.onViewRendered(path);
-    }
-
-    // --- demo data (replace with real API calls to Money-BBAPi) ---
-    const api = {
-      baseUrl: "/api", // TODO: point to your backend host/port
-    
-      async listTransactions(){
-        return [
-          { id: 501, date: '2025-08-01', account: 'AIB', category:'Expense', amount: -35.90, note:'Groceries' },
-          { id: 502, date: '2025-08-03', account: 'IBKR', category:'Trade', amount: -2000.00, note:'AAPL BUY' },
-          { id: 503, date: '2025-08-10', account: 'AIB', category:'Income', amount: 2900.00, note:'Salary' },
-        ];
-      },
-      async listPortfolios(){
-        return [ { id: 'P-001', name:'Core', value: 25670.12, pnl: +4.2 }, { id:'P-002', name:'Growth', value: 11890.33, pnl: -1.1 } ];
-      }
-    };
-
-    // --- reusable widgets ---
-    function card(title, body, extra=""){
-      return `<div class="card h-100">\n<div class="card-header d-flex justify-content-between align-items-center">\n<h5 class="card-title m-0">${title}</h5>${extra}</div>\n<div class="card-body">${body}</div>\n</div>`;
-    }
-
-    // --- views ---
-    register('/', () => `
-      <div class="row g-4">
-        <div class="col-sm-6 col-xl-3">${card('Total Balance', `<h3 class="mb-1">€ 17,363.89</h3><small class="text-muted">Across 2 accounts</small>`, '<span class="badge bg-label-success">+2.1% MoM</span>')}</div>
-        <div class="col-sm-6 col-xl-3">${card('Invested', `<h3 class="mb-1">$ 12,543.77</h3><small class="text-muted">Brokerage</small>`)}</div>
-        <div class="col-sm-6 col-xl-3">${card('Cash', `<h3 class="mb-1">€ 4,820.12</h3><small class="text-muted">Bank</small>`)}</div>
-        <div class="col-sm-6 col-xl-3">${card('PnL (30d)', `<h3 class="mb-1">+€ 382.10</h3><small class="text-success">+2.24%</small>`)}</div>
-      </div>
-      <div class="row g-4 mt-1">
-        <div class="col-xl-8">
-          ${card('Performance', `<div id="chartPerf"></div>`, '<button class="btn btn-sm btn-outline-secondary" onclick="renderPerf()"><i class=\'bx bx-refresh\'></i></button>')}
-        </div>
-        <div class="col-xl-4">
-          ${card('Recent Transactions', `<div id="recentTx"></div>`, '<a class="btn btn-sm btn-primary" href=\"#/transactions\">View all</a>')}
-        </div>
-      </div>
-    `);
-
-    register('/transactions', () => `
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Transactions</h4>
-        <div class="d-flex gap-2">
-          <input id="txSearch" class="form-control form-control-sm" placeholder="Filter…" style="max-width:240px">
-          <button class="btn btn-sm btn-outline-secondary" onclick="exportCsv('txTable')"><i class='bx bx-download me-1'></i>Export</button>
-          <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTx"><i class='bx bx-plus me-1'></i>Add</button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="table-responsive">
-          <table class="table table-striped" id="txTable">
-            <thead class="table-light"><tr><th>Date</th><th>Account</th><th>Category</th><th class="text-end">Amount</th><th>Note</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    `);
-
-    register('/portfolios', () => `
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Portfolios</h4>
-        <button class="btn btn-sm btn-outline-secondary" onclick="renderPerf()"><i class='bx bx-line-chart'></i></button>
-      </div>
-      <div class="row g-4" id="portRows"></div>
-    `);
-
-    register('/holdings', () => `
-      <div class="d-flex justify-content-between align-items-center mb-3"><h4 class="mb-0">Holdings</h4>
-      <div><button class="btn btn-sm btn-outline-secondary" disabled>Import</button></div></div>
-      <div class="card">${card('Positions', `<div class='text-muted'>Hook up to /holdings endpoint</div>`)}</div>
-    `);
-
-    register('/orders', () => `<div class="card p-4">Order ticket UI stub — integrate with /orders later.</div>`);
-    register('/categories', () => `<div class="card p-4">Categories manager stub.</div>`);
-    register('/budgets', () => `<div class="card p-4">Budgets planner stub.</div>`);
-    register('/reports', () => `<div class="card p-4">Reports hub stub (PDF/CSV exports, charts).</div>`);
-    register('/settings', () => `<div class="card p-4">Environment, currencies, sync schedules, webhooks…</div>`);
- 
-    register('/docs', () => `<div class="card p-4">Link your Swagger / OpenAPI once exposed by the API.</div>`);
-    register('/auth', () => `<div class="row g-4"><div class="col-md-5 mx-auto"><div class="card p-4">Login/Signup screens go here.</div></div></div>`);
-    register('/404', () => `<div class="text-center py-5"><h1 class="display-6">404</h1><p class="text-muted">Page not found</p></div>`);
-
-    // --- view lifecycle hook ---
-    window.onViewRendered = async (path) => {
-      if(path === '/' ){ renderPerf(); renderRecentTx(); }
-      if(path === '/transactions'){ renderTxTable(); }
-      if(path === '/portfolios'){ renderPortfolios(); }
-    };
-
-
-    async function renderTxTable(){
-      const rows = await api.listTransactions();
-      const tbody = $('#txTable tbody');
-      tbody.innerHTML = rows.map(t => `
-        <tr>
-          <td>${t.date}</td>
-          <td>${t.account}</td>
-          <td>${t.category}</td>
-          <td class="text-end ${t.amount<0? 'text-danger':'text-success'}">${fmt(t.amount, 'EUR')}</td>
-          <td>${t.note||''}</td>
-        </tr>`).join('');
-      $('#txSearch').addEventListener('input', (e)=> filterTable('txTable', e.target.value));
-    }
-
-    async function renderPortfolios(){
-      const data = await api.listPortfolios();
-      const el = $('#portRows');
-      el.innerHTML = data.map(p => `
-        <div class="col-md-6">
-          <div class="card h-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <h5 class="m-0">${p.name}</h5>
-              <span class="badge ${p.pnl>=0? 'bg-label-success':'bg-label-danger'}">${p.pnl}%</span>
-            </div>
-            <div class="card-body">
-              <div class="fs-4 fw-bold mb-2">${fmt(p.value, 'EUR')}</div>
-              <div id="chart-${p.id}" style="min-height: 160px"></div>
-            </div>
-          </div>
-        </div>
-      `).join('');
-      // small spark charts
-      data.forEach(p => {
-        new ApexCharts(document.querySelector(`#chart-${p.id}`), {
-          chart: { type: 'area', height: 160, sparkline: { enabled: true } },
-          series: [{ data: genSeries() }],
-          stroke: { curve: 'smooth', width: 2 },
-          tooltip: { enabled: false },
-          fill: { opacity: .25 },
-        }).render();
-      });
-    }
-
-    function renderPerf(){
-      const s = [10,12,11,13,12,15,16,15,18,19,21,22].map((v,i)=>({x:i,y:v}));
-      const chart = new ApexCharts(document.querySelector('#chartPerf'), {
-        chart: { type: 'line', height: 300, toolbar: { show: false } },
-        series: [{ name:'NAV', data: s }],
-        xaxis: { labels: { show: false } },
-        yaxis: { labels: { formatter: (v)=> '€'+v } },
-        stroke: { curve: 'smooth', width: 3 },
-        grid: { borderColor: 'rgba(0,0,0,.06)' }
-      });
-      $('#chartPerf').innerHTML = '';
-      chart.render();
-    }
-
-    async function renderRecentTx(){
-      const rows = (await api.listTransactions()).slice(0,6);
-      const wrap = $('#recentTx');
-      wrap.innerHTML = rows.map(t => `
-        <div class="d-flex justify-content-between border-bottom py-2">
-          <div><span class="fw-medium">${t.date}</span> — ${t.account}</div>
-          <div class="text-end ${t.amount<0? 'text-danger':'text-success'}">${fmt(t.amount, 'EUR')}</div>
-        </div>`).join('');
-    }
-
-    // --- helpers ---
-    function fmt(amount, ccy){
-      try { return new Intl.NumberFormat(undefined,{ style:'currency', currency: ccy||'EUR'}).format(amount); }
-      catch { return (amount<0?'-':'') + (ccy||'') + Math.abs(amount).toFixed(2) }
-    }
-    function filterTable(tableId, q){
-      const rows = $$('#'+tableId+' tbody tr');
-      rows.forEach(r => r.style.display = r.innerText.toLowerCase().includes(q.toLowerCase()) ? '' : 'none');
-    }
-    function exportCsv(tableId){
-      const rows = [['Date','Account','Category','Amount','Note'], ...$$('#'+tableId+' tbody tr').map(tr => Array.from(tr.children).map(td=>td.innerText))];
-      const csv = rows.map(r => r.map(v => '"'+v.replaceAll('"','\"')+'"').join(',')).join('\n');
-      const blob = new Blob([csv], {type:'text/csv'});
-      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'transactions.csv'; a.click();
-    }
-    function genSeries(){
-      let v = 100; const data=[]; for(let i=0;i<24;i++){ v += (Math.random()-.4)*4; data.push(Math.round(v)); } return data;
-    }
-
-    // --- submit handlers (stubbed) ---
-    $('#txForm').addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const form = new FormData(e.target);
-      const payload = Object.fromEntries(form.entries());
-      console.log('POST /transactions (stub)', payload);
-      // await fetch(`${api.baseUrl}/transactions`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-      $('#txSuccess').classList.remove('d-none');
-      setTimeout(()=> $('#txSuccess').classList.add('d-none'), 2500);
-    });
+  <!-- App modules (ES Modules) -->
+  <script type="module" src="js/app.js"></script>
+  <script nomodule>
+    document.getElementById('appRoot').innerHTML =
+      '<div class="alert alert-danger">Your browser does not support ES Modules. Please upgrade.</div>';
   </script>
 </body>
 </html>
