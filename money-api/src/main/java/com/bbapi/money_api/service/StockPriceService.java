@@ -9,7 +9,7 @@ public interface StockPriceService {
 
     public List<StockPrice> getAllStockPrices();
     public StockPrice getStockPriceById(StockPriceId id);
-
+    public StockPrice getLatestStockPriceById(StockPriceId id);
     public StockPrice addStockPrice(StockPrice stockPrice);
 
     // public StockPrice updateStockPrice(StockPrice stockPrice);

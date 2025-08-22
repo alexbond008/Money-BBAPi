@@ -1,4 +1,5 @@
 package com.bbapi.money_api.service;
+import java.util.Date;
 import java.util.List;
 
 import com.bbapi.money_api.entity.HistoryItem;
@@ -14,5 +15,7 @@ public interface HistoryItemService {
     // public String updateHistoryItem(String historyItem);
 
     public void deleteHistoryItem(HistoryItemId id);
+
+    public List<HistoryItem> getAllHistoryItemsOlderThan(Date date);
 
 }

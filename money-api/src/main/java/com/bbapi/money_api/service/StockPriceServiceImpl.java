@@ -28,6 +28,11 @@ public class StockPriceServiceImpl implements StockPriceService {
     }
 
     @Override
+    public StockPrice getLatestStockPriceById(StockPriceId id) {
+        return stockPriceRepository.findLatestById(id.getTicker(), id.getTimestamp()).orElse(null);
+    }
+
+    @Override
     public StockPrice addStockPrice(StockPrice stockPrice) {
         return stockPriceRepository.save(stockPrice);
     }

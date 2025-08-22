@@ -1,5 +1,6 @@
 package com.bbapi.money_api.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -34,5 +35,10 @@ public class HistroyItemServiceImpl implements HistoryItemService {
     @Override
     public void deleteHistoryItem(HistoryItemId id) {
         historyItemRepository.deleteById(id);
+    }
+
+    @Override
+    public List<HistoryItem> getAllHistoryItemsOlderThan(Date date) {
+        return historyItemRepository.getOlderThan(date);    
     }
 }
