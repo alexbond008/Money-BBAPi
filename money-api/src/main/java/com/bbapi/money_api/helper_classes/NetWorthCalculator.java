@@ -50,7 +50,7 @@ public class NetWorthCalculator {
                     Integer quantity = groupedByTicker.get(key).stream().mapToInt(HistoryItem::getQuantity).sum();
                     Integer price  = stockPriceService.getLatestStockPriceById(new StockPriceId(key, i.getTime())).getPrice();
                     currentNetWorth += quantity*price;
-                    logger.info(key+" : "+quantity+" * "+price+" = "+(quantity*price));
+                    // logger.info(key+" : "+quantity+" * "+price+" = "+(quantity*price));
                     // for (HistoryItem historyItem : groupedByTicker.get(key).stream().sorted((h1, h2) -> h2.getTimestamp().compareTo(h1.getTimestamp())).collect(Collectors.toList())) {
                     //     logger.info(key+historyItem.getTimestamp().toString());
                         
@@ -58,7 +58,7 @@ public class NetWorthCalculator {
                     
                 }
                 netWorthService.addNetWorth(new NetWorth(LocalDateTime.ofInstant(i.toInstant(), ZoneId.systemDefault()), currentNetWorth));
-                logger.info(groupedByTicker.toString());
+                // logger.info(groupedByTicker.toString());
                 i.add(Calendar.WEEK_OF_YEAR, 1);
             } while (i.before(currentDate));
             
