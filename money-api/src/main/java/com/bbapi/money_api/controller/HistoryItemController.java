@@ -1,7 +1,9 @@
 package com.bbapi.money_api.controller;
 
+import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +35,9 @@ public class HistoryItemController {
         return historyItemService.getAllHistoryItems();
     }
 
-    @GetMapping("/{id}")
-    public HistoryItem getHistoryItemById(@RequestParam HistoryItemId id) {
-        return historyItemService.getHistoryItemById(id);
+    @GetMapping("/{ticker}/{timestamp}")
+    public HistoryItem getHistoryItemById(@PathVariable String ticker,  @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date timestamp) {
+        return historyItemService.getHistoryItemById(ticker, timestamp);
     }
 
     @PostMapping

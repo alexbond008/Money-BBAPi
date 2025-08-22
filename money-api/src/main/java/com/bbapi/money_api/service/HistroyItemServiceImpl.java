@@ -1,5 +1,6 @@
 package com.bbapi.money_api.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -22,8 +23,8 @@ public class HistroyItemServiceImpl implements HistoryItemService {
         return historyItemRepository.findAll();
     }
     @Override
-    public HistoryItem getHistoryItemById(HistoryItemId id) {
-        return historyItemRepository.findById(id).orElse(null);
+    public HistoryItem getHistoryItemById(String ticker, Date timestamp) {
+        return historyItemRepository.findById(ticker, timestamp);
     }
 
     @Override
