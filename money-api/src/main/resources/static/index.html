@@ -38,7 +38,6 @@
           <li class="menu-item active"><a href="#/" class="menu-link"><i class='menu-icon bx bxs-dashboard'></i><div>Dashboard</div></a></li>
           <li class="menu-header small text-uppercase"><span class="menu-header-text">Portfolio</span></li>
           <li class="menu-item"><a href="#/portfolios" class="menu-link"><i class='menu-icon bx bxs-briefcase'></i><div>Portfolios</div></a></li>
-          <li class="menu-item"><a href="#/accounts" class="menu-link"><i class='menu-icon bx bxs-wallet'></i><div>Accounts</div></a></li>
           <li class="menu-item"><a href="#/holdings" class="menu-link"><i class='menu-icon bx bxs-pie-chart-alt-2'></i><div>Holdings</div></a></li>
           <li class="menu-item"><a href="#/transactions" class="menu-link"><i class='menu-icon bx bxs-transfer-alt'></i><div>Transactions</div></a></li>
           <li class="menu-item"><a href="#/orders" class="menu-link"><i class='menu-icon bx bxs-cart-add'></i><div>Orders</div></a></li>
@@ -46,10 +45,8 @@
           <li class="menu-item"><a href="#/budgets" class="menu-link"><i class='menu-icon bx bxs-spreadsheet'></i><div>Budgets</div></a></li>
           <li class="menu-item"><a href="#/reports" class="menu-link"><i class='menu-icon bx bxs-report'></i><div>Reports</div></a></li>
           <li class="menu-header small text-uppercase"><span class="menu-header-text">System</span></li>
-          <li class="menu-item"><a href="#/users" class="menu-link"><i class='menu-icon bx bxs-user-detail'></i><div>Users</div></a></li>
           <li class="menu-item"><a href="#/settings" class="menu-link"><i class='menu-icon bx bxs-cog'></i><div>Settings</div></a></li>
-          <li class="menu-item"><a href="#/docs" class="menu-link"><i class='menu-icon bx bxs-book-alt'></i><div>API Docs</div></a></li>
-          <li class="menu-item"><a href="#/auth" class="menu-link"><i class='menu-icon bx bxs-lock-alt'></i><div>Auth</div></a></li>
+
         </ul>
       </aside>
 
@@ -179,13 +176,7 @@
     // --- demo data (replace with real API calls to Money-BBAPi) ---
     const api = {
       baseUrl: "/api", // TODO: point to your backend host/port
-      async listAccounts(){
-        // return fetch(`${this.baseUrl}/accounts`).then(r=>r.json());
-        return [
-          { id: 1, name: 'Brokerage - IBKR', type: 'Brokerage', currency: 'USD', balance: 12543.77 },
-          { id: 2, name: 'Savings - AIB', type: 'Bank', currency: 'EUR', balance: 4820.12 },
-        ];
-      },
+    
       async listTransactions(){
         return [
           { id: 501, date: '2025-08-01', account: 'AIB', category:'Expense', amount: -35.90, note:'Groceries' },
@@ -217,23 +208,6 @@
         </div>
         <div class="col-xl-4">
           ${card('Recent Transactions', `<div id="recentTx"></div>`, '<a class="btn btn-sm btn-primary" href=\"#/transactions\">View all</a>')}
-        </div>
-      </div>
-    `);
-
-    register('/accounts', () => `
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Accounts</h4>
-        <div>
-          <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTx"><i class='bx bx-plus me-1'></i>New Transaction</button>
-        </div>
-      </div>
-      <div class="card">
-        <div class="table-responsive">
-          <table class="table table-hover mb-0" id="accountsTable">
-            <thead class="table-light"><tr><th>Name</th><th>Type</th><th>Currency</th><th class="text-end">Balance</th><th></th></tr></thead>
-            <tbody></tbody>
-          </table>
         </div>
       </div>
     `);
@@ -276,7 +250,7 @@
     register('/budgets', () => `<div class="card p-4">Budgets planner stub.</div>`);
     register('/reports', () => `<div class="card p-4">Reports hub stub (PDF/CSV exports, charts).</div>`);
     register('/settings', () => `<div class="card p-4">Environment, currencies, sync schedules, webhooks…</div>`);
-    register('/users', () => `<div class="card p-4">Users & roles management stub.</div>`);
+ 
     register('/docs', () => `<div class="card p-4">Link your Swagger / OpenAPI once exposed by the API.</div>`);
     register('/auth', () => `<div class="row g-4"><div class="col-md-5 mx-auto"><div class="card p-4">Login/Signup screens go here.</div></div></div>`);
     register('/404', () => `<div class="text-center py-5"><h1 class="display-6">404</h1><p class="text-muted">Page not found</p></div>`);
@@ -284,28 +258,10 @@
     // --- view lifecycle hook ---
     window.onViewRendered = async (path) => {
       if(path === '/' ){ renderPerf(); renderRecentTx(); }
-      if(path === '/accounts'){ renderAccounts(); }
       if(path === '/transactions'){ renderTxTable(); }
       if(path === '/portfolios'){ renderPortfolios(); }
     };
 
-    // --- renderers ---
-    async function renderAccounts(){
-      const data = await api.listAccounts();
-      const tbody = $('#accountsTable tbody');
-      tbody.innerHTML = data.map(a => `
-        <tr>
-          <td>${a.name}</td>
-          <td>${a.type}</td>
-          <td>${a.currency}</td>
-          <td class="text-end">${fmt(a.balance, a.currency)}</td>
-          <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="#/transactions">View tx</a></td>
-        </tr>`).join('');
-
-      // populate account select in tx form
-      const sel = $('#txForm select[name="accountId"]');
-      sel.innerHTML = '<option selected disabled value="">Choose…</option>' + data.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
-    }
 
     async function renderTxTable(){
       const rows = await api.listTransactions();
