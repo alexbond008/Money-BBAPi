@@ -43,6 +43,17 @@ Planned computation:
 
 ---
 
+### Example POST request
+
+curl -X POST http://localhost:8080/historyItem/add \
+  -H "Content-Type: application/json" \
+  -d '{"ticker":"AAPL","quantity":10,"price":189,"timestamp":"2025-08-22T12:00:00Z"}'
+
+
+
+
+---
+
 ### Sample JSON
 
 `GET /portfolio`
