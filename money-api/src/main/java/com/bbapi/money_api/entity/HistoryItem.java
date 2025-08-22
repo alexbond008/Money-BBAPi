@@ -3,12 +3,17 @@ package com.bbapi.money_api.entity;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 
 @Entity
+@IdClass(HistoryItemId.class)
 public class HistoryItem {
+    @Id
     private String ticker;
     private Integer quantity;
     private Integer price;
+    @Id
     private Date timestamp;
 
     public HistoryItem() {

@@ -1,37 +1,23 @@
 package com.bbapi.money_api.entity;
 
-import java.util.Date;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
 @Entity
-
 public class NetWorth {
-    private Date timeStamp;
-    private Integer NetWorth;
+
+    @Id
+    private LocalDateTime calculatedAt;
+
+    private BigDecimal amount;
 
     public NetWorth() {
     }
 
-    public NetWorth(Date timeStamp, Integer netWorth) {
-        this.timeStamp = timeStamp;
-        NetWorth = netWorth;
-    }
-
-    public Date getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(Date timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    public Integer getNetWorth() {
-        return NetWorth;
-    }
-
-    public void setNetWorth(Integer netWorth) {
-        NetWorth = netWorth;
-    }
-    
+    public LocalDateTime getCalculatedAt() { return calculatedAt; }
+    public void setCalculatedAt(LocalDateTime calculatedAt) { this.calculatedAt = calculatedAt; }
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 }
 

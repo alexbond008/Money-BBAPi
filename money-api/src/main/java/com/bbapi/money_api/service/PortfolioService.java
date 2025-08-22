@@ -1,10 +1,8 @@
 package com.bbapi.money_api.service;
 
-public interface PortfolioService {
+import java.util.List;
+import com.bbapi.money_api.helper_classes.PortfolioItem;
 
-    public Object getAllPortfolioItems() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllPortfolioItems'");
-    }
-    
+public interface PortfolioService {
+    List<PortfolioItem> getAllPortfolioItems();
 }

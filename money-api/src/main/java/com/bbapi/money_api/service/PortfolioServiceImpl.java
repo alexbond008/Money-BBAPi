@@ -2,13 +2,21 @@ package com.bbapi.money_api.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.bbapi.money_api.entity.HistoryItem;
 import com.bbapi.money_api.helper_classes.PortfolioItem;
 import com.bbapi.money_api.repository.HistoryItemRepository;
 
+@Service
 public class PortfolioServiceImpl implements PortfolioService {
-
+    @Autowired
     private HistoryItemRepository historyItemRepository;
+
+    public PortfolioServiceImpl(HistoryItemRepository historyItemRepository) {
+        this.historyItemRepository = historyItemRepository;
+    }
 
     @Override
     public List<PortfolioItem> getAllPortfolioItems() {
