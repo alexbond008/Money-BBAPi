@@ -3,8 +3,6 @@ package com.bbapi.money_api.service;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.bbapi.money_api.entity.StockPrice;
 import com.bbapi.money_api.entity.StockPriceId;
 
