@@ -3,9 +3,12 @@ package com.bbapi.money_api.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.bbapi.money_api.entity.NetWorth;
 import com.bbapi.money_api.repository.NetWorthRepository;
 
+@Service
 public class NetWorthServiceImpl implements NetWorthService {
 
     private NetWorthRepository netWorthRepository;
