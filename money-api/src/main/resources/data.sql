@@ -273,3 +273,11 @@ INSERT INTO stock_price (price, timestamp, ticker) VALUES (21475, TIMESTAMP'2025
 INSERT INTO stock_price (price, timestamp, ticker) VALUES (22269, TIMESTAMP'2025-08-04', 'AMZN');
 INSERT INTO stock_price (price, timestamp, ticker) VALUES (23103, TIMESTAMP'2025-08-11', 'AMZN');
 INSERT INTO stock_price (price, timestamp, ticker) VALUES (22195, TIMESTAMP'2025-08-18', 'AMZN');
+
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (21624, 100, TIMESTAMP'2024-08-05', 'AAPL');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22502, 100, TIMESTAMP'2025-07-07', 'AMZN');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22602, -50, TIMESTAMP'2025-07-08', 'AMZN');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22613, 100, TIMESTAMP'2025-07-14', 'AMZN');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22653, -50, TIMESTAMP'2025-07-15', 'AMZN');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-07-21', 'AMZN');
+
