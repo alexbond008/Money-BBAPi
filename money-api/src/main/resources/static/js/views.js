@@ -88,6 +88,9 @@ register('/transactions', () => `
           </div>
         </div>
         <div class="col-md-4 text-end">
+          <button class="btn btn-sm btn-outline-primary" id="addTransaction">
+            <i class='bx bx-plus me-1'></i>Add
+          </button>
           <button class="btn btn-sm btn-outline-secondary" id="reloadHistory">
             <i class='bx bx-refresh me-1'></i>Reload
           </button>
