@@ -1,5 +1,6 @@
 package com.bbapi.money_api.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,22 +9,25 @@ import org.springframework.stereotype.Service;
 import com.bbapi.money_api.entity.HistoryItem;
 import com.bbapi.money_api.helper_classes.PortfolioItem;
 import com.bbapi.money_api.repository.HistoryItemRepository;
+import com.bbapi.money_api.repository.StockPriceRepository;
 
 @Service
 public class PortfolioServiceImpl implements PortfolioService {
     @Autowired
     private HistoryItemRepository historyItemRepository;
+    private StockPriceRepository stockPriceRepository;
 
-    public PortfolioServiceImpl(HistoryItemRepository historyItemRepository) {
+    public PortfolioServiceImpl(HistoryItemRepository historyItemRepository, StockPriceRepository stockPriceRepository) {
+        this.stockPriceRepository = stockPriceRepository;
         this.historyItemRepository = historyItemRepository;
     }
 
     @Override
     public List<PortfolioItem> getAllPortfolioItems() {
         List<HistoryItem> historyItems = historyItemRepository.findAll();
-        String[] tickers = {"AAPL"};
-        Integer currentPrice = 150; // This should be fetched from a real-time stock price service
+        String[] tickers = {"AAPL", "META", "NVDA", "MSFT", "AMZN"};
         for (String ticker : tickers) {
+            Integer currentPrice = stockPriceRepository.findLatestById(ticker, new Date()).orElse(null).getPrice();
             int totalQuantity = 0;
             int totalSpent = 0;
             for (HistoryItem item : historyItems) {
