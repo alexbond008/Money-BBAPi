@@ -3,6 +3,7 @@ package com.bbapi.money_api.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +34,13 @@ public class CashController {
     }
 
     @GetMapping("/{id}")
-    public CashWorth getCashById(@RequestParam LocalDateTime id) {
+    public CashWorth getCashById(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime id) {
         return cashService.getCashById(id);
+    }
+
+    @GetMapping("/latest/{id}")
+    public CashWorth getLatestCashById(@PathVariable LocalDateTime id) {
+        return cashService.getLatestCashById(id);
     }
 
     @PostMapping(path = "/add")

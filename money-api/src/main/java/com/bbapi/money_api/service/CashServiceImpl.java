@@ -37,6 +37,11 @@ public class CashServiceImpl implements CashService{
         cashRepository.deleteById(id);
     }
 
+    @Override
+    public CashWorth getLatestCashById(LocalDateTime id) {
+        return cashRepository.findLatestById(id).orElse(null);
+    }
+
     
 
     
