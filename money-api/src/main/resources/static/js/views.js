@@ -55,13 +55,29 @@ register('/portfolios', () => `
 
 // Single route: /transactions
 register('/transactions', () => `
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">History Items</h4>
-    <button class="btn btn-sm btn-outline-secondary" id="reloadHistory">
-      <i class='bx bx-refresh me-1'></i>Reload
-    </button>
-  </div>
   <div class="card">
+    <div class="card-header border-bottom">
+      <div class="d-flex justify-content-between align-items-center row">
+        <div class="col-md-4">
+          <h5 class="card-title mb-0">Transaction History</h5>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group input-group-merge">
+            <span class="input-group-text"><i class="bx bx-search"></i></span>
+            <input type="text" 
+                   id="transactionSearch" 
+                   class="form-control" 
+                   placeholder="Search ticker..."
+                   aria-label="Search transactions">
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <button class="btn btn-sm btn-outline-secondary" id="reloadHistory">
+            <i class='bx bx-refresh me-1'></i>Reload
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="table-responsive">
       <table class="table table-striped mb-0" id="historyTable">
         <thead class="table-light">
@@ -101,24 +117,47 @@ register('/holdings', () => `
 `);
 
 export async function onViewRendered(path){
-  if (path === '/transactions') renderHistoryTable();
+  if (path === '/transactions') {
+    renderHistoryTable();
+    
+    // Add search input listener
+    const searchInput = document.getElementById('transactionSearch');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        renderHistoryTable(e.target.value.trim());
+      });
+    }
+
+    // Add reload button listener
+    document.getElementById('reloadHistory')?.addEventListener('click', () => {
+      const searchInput = document.getElementById('transactionSearch');
+      renderHistoryTable(searchInput?.value.trim() || '');
+    }, { once: true });
+  }
   if (path === '/portfolios') renderPortfolio();
   if (path === '/') renderNetWorth();
   if (path === '/holdings') renderHoldingsPieChart();
 }
 
 // Render function
-async function renderHistoryTable(){
+async function renderHistoryTable(searchTicker = '') {
   const tbody = document.querySelector('#historyTable tbody');
   if(!tbody) return;
+
   try {
     const rows = await fetchHistoryItems();
-    if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="4" class="text-muted p-3">No data</td></tr>`;
+    
+    // Filter rows based on search input
+    const filteredRows = searchTicker 
+      ? rows.filter(r => r.ticker.toLowerCase().includes(searchTicker.toLowerCase()))
+      : rows;
+
+    if (!filteredRows.length) {
+      tbody.innerHTML = `<tr><td colspan="4" class="text-muted p-3">No matching transactions found</td></tr>`;
       return;
     }
-    tbody.innerHTML = rows.map(r => {
-      // If backend price is in cents convert; otherwise show raw
+
+    tbody.innerHTML = filteredRows.map(r => {
       const pricePerShare = r.price >= 1000 ? (r.price / 100).toFixed(2) : r.price;
       const date = (r.timestamp || '').split('T')[0];
       return `
@@ -129,12 +168,11 @@ async function renderHistoryTable(){
           <td class="text-end">${pricePerShare}</td>
         </tr>`;
     }).join('');
-  } catch (e){
+
+  } catch (e) {
     console.error(e);
     tbody.innerHTML = `<tr><td colspan="4" class="text-danger p-3">Load error</td></tr>`;
   }
-  document.getElementById('reloadHistory')
-    ?.addEventListener('click', renderHistoryTable, { once:true });
 }
 
 async function renderNetWorth() {
