@@ -232,7 +232,7 @@ async function renderPortfolio(){
       const currentPrice = (r.currentPrice / 100).toFixed(2);
       const ticker = r.ticker || '';
       const quantity = r.quantity || 0;
-      const profit = (currentPrice - avgPrice).toFixed(2);
+      const profit = ((currentPrice - avgPrice)*quantity).toFixed(2);
       const profit_percentage = ((currentPrice-avgPrice)/avgPrice * 100).toFixed(2);
       const totalValue = currentPrice * quantity;
 
