@@ -331,11 +331,11 @@ async function renderHoldingsPieChart() {
     const totalValue = data.reduce((sum, item) => sum + (item.currentPrice * item.quantity), 0);
     
     const options = {
-      series: data.map(item => (item.currentPrice * item.quantity)),
+      series: data.map(item => ((item.currentPrice * item.quantity)/100)),
       chart: {
         type: 'pie',
         height: 420,
-        fontFamily: 'Public Sans'
+        fontFamily: 'Helvetica'
       },
       labels: data.map(item => item.ticker),
       colors: [
