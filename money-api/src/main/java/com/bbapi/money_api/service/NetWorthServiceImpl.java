@@ -41,5 +41,6 @@ public class NetWorthServiceImpl implements NetWorthService {
     public void deleteNetWorth(LocalDateTime id) {
         netWorthRepository.deleteById(id);
     }
+
     
 }
