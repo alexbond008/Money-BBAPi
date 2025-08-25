@@ -100,31 +100,40 @@
   <!-- Offcanvas: Create Transaction (example of endpoint wiring) -->
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasTx" aria-labelledby="offcanvasTxLabel">
     <div class="offcanvas-header">
-      <h5 id="offcanvasTxLabel" class="offcanvas-title">New Transaction</h5>
+      <h5 class="offcanvas-title" id="offcanvasTxLabel">Add Transaction</h5>
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
       <form id="txForm" class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">Date</label>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Ticker</label>
+        <div class="col-12">
+          <label class="form-label">Ticker Symbol</label>
+          <input class="form-control" type="text" name="ticker" required pattern="[A-Za-z]+" />
         </div>
         <div class="col-md-6">
           <label class="form-label">Quantity</label>
-          <input class="form-control" type="number" step="0.01" name="amount" required />
+          <input class="form-control" type="number" step="0.01" name="quantity" required />
         </div>
         <div class="col-md-6">
-          <label class="form-label">Price per share</label>
+          <label class="form-label">Price per Share</label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input class="form-control" type="number" step="0.01" name="price" required />
+          </div>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Date</label>
           <input class="form-control" type="date" name="date" required />
         </div>
         <div class="col-12 d-flex gap-2">
-          <button class="btn btn-primary" type="submit"><i class='bx bx-save me-1'></i>Save</button>
-          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="offcanvas">Cancel</button>
+          <button class="btn btn-primary" type="submit">
+            <i class='bx bx-save me-1'></i>Save
+          </button>
+          <button class="btn btn-outline-secondary" type="button" data-bs-dismiss="offcanvas">
+            Cancel
+          </button>
         </div>
       </form>
-      <div class="alert alert-success d-none mt-3" id="txSuccess">Saved! (stub)</div>
+      <div class="alert alert-success d-none mt-3" id="txSuccess">Transaction saved successfully!</div>
     </div>
   </div>
 

@@ -2,6 +2,8 @@
 import { fetchHistoryItems, fetchPortfolio } from './api.js';
 import * as chartlib from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.6/+esm';
 
+const bootstrap = window.bootstrap;
+
 const routes = {};
 export const register = (path, render) => routes[path] = render;
 export function resolve(path){ return routes[path] || routes['/transactions']; }
@@ -147,6 +149,53 @@ export async function onViewRendered(path){
         renderHistoryTable(e.target.value.trim());
       });
     }
+
+    // Add transaction button listener
+    document.getElementById('addTransaction')?.addEventListener('click', () => {
+      const offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasTx'));
+      offcanvas.show();
+    });
+
+    // Add form submit handler
+    document.getElementById('txForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      
+      try {
+        const response = await fetch('http://localhost:8080/historyItem', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ticker: formData.get('ticker'),
+            quantity: parseFloat(formData.get('quantity')),
+            price: Math.round(parseFloat(formData.get('price')) * 100), // Convert to cents
+            timestamp: formData.get('date')
+          })
+        });
+
+        if (!response.ok) throw new Error('Transaction failed');
+
+        // Show success message
+        const successAlert = document.getElementById('txSuccess');
+        successAlert.classList.remove('d-none');
+        setTimeout(() => successAlert.classList.add('d-none'), 3000);
+
+        // Clear form and close offcanvas
+        form.reset();
+        const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('offcanvasTx'));
+        offcanvas.hide();
+
+        // Refresh the transactions table
+        renderHistoryTable();
+
+      } catch (error) {
+        console.error('Error adding transaction:', error);
+        alert('Failed to add transaction');
+      }
+    });
 
     // Add reload button listener
     document.getElementById('reloadHistory')?.addEventListener('click', () => {
