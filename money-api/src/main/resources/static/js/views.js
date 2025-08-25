@@ -1,9 +1,22 @@
 // Simplified: remove unused portfolio/recent widgets; focus on history table
 import { fetchHistoryItems } from './api.js';
+import * as chartlib from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.6/+esm';
 
 const routes = {};
 export const register = (path, render) => routes[path] = render;
 export function resolve(path){ return routes[path] || routes['/transactions']; }
+
+// Single route: /
+register('/', () => `
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Net Worth History</h4>
+  </div>
+  <div class="card">
+    <div style="width: 1fr;"><canvas id="netWorth"></canvas></div>
+    </div>
+  </div>
+`);
+
 
 // Single route: /transactions
 register('/transactions', () => `
@@ -32,6 +45,7 @@ register('/transactions', () => `
 
 export async function onViewRendered(path){
   if (path === '/transactions') renderHistoryTable();
+  if (path === '/') renderNetWorth();
 }
 
 // Render function
@@ -63,6 +77,28 @@ async function renderHistoryTable(){
   document.getElementById('reloadHistory')
     ?.addEventListener('click', renderHistoryTable, { once:true });
 }
+
+chartlib.Chart.register(...chartlib.registerables);
+async function renderNetWorth() {
+  const response = await fetch("http://localhost:8080/netWorth");
+  const data = await response.json();
+  console.log(data);
+  new chartlib.Chart(
+    document.getElementById('netWorth'),
+    {
+      type: 'line',
+      data: {
+        labels: data.map(row => row.calculatedAt.slice(0,10)),
+        datasets: [
+          {
+            label: 'Net Worth',
+            data: data.map(row => row.amount/100)
+          }
+        ]
+      }
+    }
+  );
+};
 
 // Default initial route if no hash
 if (!location.hash) location.hash = '#/transactions';
