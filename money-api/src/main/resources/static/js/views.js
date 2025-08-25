@@ -104,7 +104,7 @@ async function renderNetWorth() {
         toolbar: {
           show: false
         },
-        fontFamily: 'Public Sans'
+        fontFamily: 'Helvetica'
       },
       dataLabels: {
         enabled: false
@@ -156,7 +156,7 @@ async function renderNetWorth() {
             return '$' + value.toFixed(2)
           }
         },
-        theme: 'dark',
+        theme: 'light',
         marker: {
           show: true
         }
