@@ -12,4 +12,5 @@ public interface NetWorthService {
     public NetWorth addNetWorth(NetWorth netWorth);
     // public NetWorth updateNetWorth(NetWorth netWorth);
     public void deleteNetWorth(LocalDateTime id);    
+    public void deleteAllNetWorthsNewerThan(LocalDateTime date);
 } 

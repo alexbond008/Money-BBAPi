@@ -1,6 +1,7 @@
 package com.bbapi.money_api.service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -43,6 +44,11 @@ public class NetWorthServiceImpl implements NetWorthService {
     @Override
     public void deleteNetWorth(LocalDateTime id) {
         netWorthRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteAllNetWorthsNewerThan(LocalDateTime date) {
+        netWorthRepository.deleteAllNewerThan(date);
     }
 
     
