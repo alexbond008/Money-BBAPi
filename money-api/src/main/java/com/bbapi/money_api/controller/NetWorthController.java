@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bbapi.money_api.entity.CashWorth;
 import com.bbapi.money_api.entity.NetWorth;
 import com.bbapi.money_api.service.NetWorthService;
 
@@ -38,6 +39,11 @@ public class NetWorthController {
     @GetMapping("/{id}")
     public NetWorth getNetWorthById(@PathVariable("id") LocalDateTime id) {
         return netWorthService.getNetWorthById(id);
+    }
+
+    @GetMapping("/latest")
+    public NetWorth getLatest() {
+        return netWorthService.getLatestNetWorth();
     }
 
     @PostMapping()

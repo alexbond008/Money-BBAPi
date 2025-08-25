@@ -27,15 +27,26 @@ export function mapHistoryItem(raw){
 
 async function fetchAndDisplayCash() {
   try {
-    const resp = await fetch('/cash/latest');
-    if (!resp.ok) throw new Error('cash fetch ' + resp.status);
-    const data = await resp.json();
-    const el = document.getElementById('cashBar');
-    if (el) el.textContent = data ? `Cash: ${formatCents(data.amount)}` : 'No cash data';
+    const cashResp = await fetch('/cash/latest');
+    if (!cashResp.ok) throw new Error('cash fetch ' + cashResp.status);
+    const cashData = await cashResp.json();
+    const cashEl = document.getElementById('cashBar');
+    if (cashEl) cashEl.textContent = cashData ? `Cash: ${formatCents(cashData.amount)}` : 'No cash data';
+
+
+    // Fetching net worth data
+    const netWorthResp = await fetch('/netWorth/latest');
+    if (!netWorthResp.ok) throw new Error('netWorth fetch ' + netWorthResp.status);
+    const netWorthData = await netWorthResp.json();
+    const netWorthEl = document.getElementById('netWorthBar');
+    if (netWorthEl) netWorthEl.textContent = netWorthData ? `Net Worth: ${formatCents(netWorthData.amount)}` : 'No net worth data';
+    
   } catch (e) {
     console.error(e);
-    const el = document.getElementById('cashBar');
-    if (el) el.textContent = 'Cash load error';
+    const cashEl = document.getElementById('cashBar');
+    if (cashEl) cashEl.textContent = 'Cash load error';
+    const netWorthEl = document.getElementById('netWorthBar');
+    if (netWorthEl) netWorthEl.textContent = 'Net worth load error';
   }
 }
 

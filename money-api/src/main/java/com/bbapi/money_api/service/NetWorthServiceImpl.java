@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.bbapi.money_api.entity.CashWorth;
 import com.bbapi.money_api.entity.NetWorth;
 import com.bbapi.money_api.repository.NetWorthRepository;
 
@@ -51,5 +52,8 @@ public class NetWorthServiceImpl implements NetWorthService {
         netWorthRepository.deleteAllNewerThan(date);
     }
 
-    
+    @Override
+    public NetWorth getLatestNetWorth() {
+        return netWorthRepository.findTopByOrderByCalculatedAtDesc().orElse(null);
+    }
 }
