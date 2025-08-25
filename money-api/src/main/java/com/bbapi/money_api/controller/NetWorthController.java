@@ -36,7 +36,7 @@ public class NetWorthController {
     }
 
     @GetMapping("/{id}")
-    public NetWorth getNetWorthById(@RequestParam LocalDateTime id) {
+    public NetWorth getNetWorthById(@PathVariable("id") LocalDateTime id) {
         return netWorthService.getNetWorthById(id);
     }
 

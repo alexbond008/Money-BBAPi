@@ -72,7 +72,7 @@ public class NetWorthCalculator {
             // netWorthService.getAllNetWorths();
             // stockPriceService.getAllStockPrices();
             // List<HistoryItem> historyItemService.getAllHistoryItemsOlderThan(startDate.getTime());
-        logger.info("App started;");
+        logger.info("Net Worth started;");
         // logger.info(historyItemService.getAllHistoryItemsOlderThan(currentDate.getTime()).toString());
     }
 }
