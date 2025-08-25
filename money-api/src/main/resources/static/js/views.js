@@ -285,11 +285,15 @@ async function renderHoldingsPieChart() {
     const response = await fetch("http://localhost:8080/portfolio");
     const data = await response.json();
     
+    // Clean up any existing chart
+    const chartElement = document.getElementById('holdingsPieChart');
+    chartElement.innerHTML = '';
+    
     // Calculate total portfolio value for percentages
-    const totalValue = data.reduce((sum, item) => sum + item.totalValue, 0);
+    const totalValue = data.reduce((sum, item) => sum + (item.currentPrice * item.quantity), 0);
     
     const options = {
-      series: data.map(item => item.totalValue),
+      series: data.map(item => (item.currentPrice * item.quantity)),
       chart: {
         type: 'pie',
         height: 420,
@@ -307,51 +311,25 @@ async function renderHoldingsPieChart() {
       ],
       legend: {
         position: 'bottom',
-        fontFamily: 'Public Sans',
+        fontFamily: 'Helvetica',
         labels: {
           colors: '#697a8d',
-        },
-        markers: {
-          fillColors: '#696cff'
         }
       },
       plotOptions: {
         pie: {
-          donut: {
-            labels: {
-              show: true,
-              name: {
-                fontSize: '22px',
-                fontFamily: 'Public Sans'
-              },
-              value: {
-                fontSize: '16px',
-                fontFamily: 'Public Sans',
-                formatter: function(val) {
-                  return '$' + val.toFixed(2);
-                }
-              },
-              total: {
-                show: true,
-                fontSize: '16px',
-                fontFamily: 'Public Sans',
-                label: 'Total Value',
-                formatter: function(w) {
-                  return '$' + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toFixed(2);
-                }
-              }
-            }
-          }
+          expandOnClick: true
         }
       },
       dataLabels: {
         enabled: true,
         formatter: function(val, opts) {
-          return opts.w.config.labels[opts.seriesIndex] + ': ' + (val * 100 / totalValue).toFixed(1) + '%';
+          const value = opts.w.globals.seriesTotals[opts.seriesIndex];
+          return opts.w.config.labels[opts.seriesIndex] + '\n$' + value.toFixed(2);
         },
         style: {
           fontSize: '14px',
-          fontFamily: 'Public Sans',
+          fontFamily: 'Helvetica',
           colors: ['#fff']
         }
       },
@@ -362,22 +340,17 @@ async function renderHoldingsPieChart() {
             return '$' + value.toFixed(2) + ' (' + (value * 100 / totalValue).toFixed(1) + '%)';
           }
         }
-      },
-      responsive: [{
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 360
-          },
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }]
+      }
     };
 
     const chart = new ApexCharts(document.querySelector("#holdingsPieChart"), options);
     await chart.render();
+
+    // Add reload button event listener
+    document.getElementById('reloadHoldings')?.addEventListener('click', () => {
+      chart.destroy();
+      renderHoldingsPieChart();
+    }, { once: true });
 
   } catch (error) {
     console.error('Error rendering holdings chart:', error);
