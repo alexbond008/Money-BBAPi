@@ -25,15 +25,31 @@ register('/', () => `
   </div>
 `);
 
-// Single route: /portfolios
+// Update the portfolios route registration to include search
 register('/portfolios', () => `
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">Portfolio</h4>
-    <button class="btn btn-sm btn-outline-secondary" id="reloadPortfolio">
-      <i class='bx bx-refresh me-1'></i>Reload
-    </button>
-  </div>
   <div class="card">
+    <div class="card-header border-bottom">
+      <div class="d-flex justify-content-between align-items-center row">
+        <div class="col-md-4">
+          <h5 class="card-title mb-0">Portfolio</h5>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group input-group-merge">
+            <span class="input-group-text"><i class="bx bx-search"></i></span>
+            <input type="text" 
+                   id="portfolioSearch" 
+                   class="form-control" 
+                   placeholder="Search ticker..."
+                   aria-label="Search portfolio">
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <button class="btn btn-sm btn-outline-secondary" id="reloadPortfolio">
+            <i class='bx bx-refresh me-1'></i>Reload
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="table-responsive">
       <table class="table table-striped mb-0" id="portfolioTable">
         <thead class="table-light">
@@ -47,7 +63,7 @@ register('/portfolios', () => `
             <th class="text-end">Total Value</th>
           </tr>
         </thead>
-        <tbody><tr><td colspan="4" class="text-muted p-3">Loading…</td></tr></tbody>
+        <tbody><tr><td colspan="7" class="text-muted p-3">Loading…</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -55,13 +71,29 @@ register('/portfolios', () => `
 
 // Single route: /transactions
 register('/transactions', () => `
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">History Items</h4>
-    <button class="btn btn-sm btn-outline-secondary" id="reloadHistory">
-      <i class='bx bx-refresh me-1'></i>Reload
-    </button>
-  </div>
   <div class="card">
+    <div class="card-header border-bottom">
+      <div class="d-flex justify-content-between align-items-center row">
+        <div class="col-md-4">
+          <h5 class="card-title mb-0">Transaction History</h5>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group input-group-merge">
+            <span class="input-group-text"><i class="bx bx-search"></i></span>
+            <input type="text" 
+                   id="transactionSearch" 
+                   class="form-control" 
+                   placeholder="Search ticker..."
+                   aria-label="Search transactions">
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <button class="btn btn-sm btn-outline-secondary" id="reloadHistory">
+            <i class='bx bx-refresh me-1'></i>Reload
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="table-responsive">
       <table class="table table-striped mb-0" id="historyTable">
         <thead class="table-light">
@@ -100,25 +132,65 @@ register('/holdings', () => `
   </div>
 `);
 
+// Update the onViewRendered function to include portfolio search
 export async function onViewRendered(path){
-  if (path === '/transactions') renderHistoryTable();
-  if (path === '/portfolios') renderPortfolio();
+  if (path === '/transactions') {
+    renderHistoryTable();
+    
+    // Add search input listener
+    const searchInput = document.getElementById('transactionSearch');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        renderHistoryTable(e.target.value.trim());
+      });
+    }
+
+    // Add reload button listener
+    document.getElementById('reloadHistory')?.addEventListener('click', () => {
+      const searchInput = document.getElementById('transactionSearch');
+      renderHistoryTable(searchInput?.value.trim() || '');
+    }, { once: true });
+  }
+  if (path === '/portfolios') {
+    renderPortfolio();
+    
+    // Add search input listener
+    const searchInput = document.getElementById('portfolioSearch');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        renderPortfolio(e.target.value.trim());
+      });
+    }
+
+    // Add reload button listener
+    document.getElementById('reloadPortfolio')?.addEventListener('click', () => {
+      const searchInput = document.getElementById('portfolioSearch');
+      renderPortfolio(searchInput?.value.trim() || '');
+    }, { once: true });
+  }
   if (path === '/') renderNetWorth();
   if (path === '/holdings') renderHoldingsPieChart();
 }
 
 // Render function
-async function renderHistoryTable(){
+async function renderHistoryTable(searchTicker = '') {
   const tbody = document.querySelector('#historyTable tbody');
   if(!tbody) return;
+
   try {
     const rows = await fetchHistoryItems();
-    if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="4" class="text-muted p-3">No data</td></tr>`;
+    
+    // Filter rows based on search input
+    const filteredRows = searchTicker 
+      ? rows.filter(r => r.ticker.toLowerCase().includes(searchTicker.toLowerCase()))
+      : rows;
+
+    if (!filteredRows.length) {
+      tbody.innerHTML = `<tr><td colspan="4" class="text-muted p-3">No matching transactions found</td></tr>`;
       return;
     }
-    tbody.innerHTML = rows.map(r => {
-      // If backend price is in cents convert; otherwise show raw
+
+    tbody.innerHTML = filteredRows.map(r => {
       const pricePerShare = r.price >= 1000 ? (r.price / 100).toFixed(2) : r.price;
       const date = (r.timestamp || '').split('T')[0];
       return `
@@ -129,12 +201,11 @@ async function renderHistoryTable(){
           <td class="text-end">${pricePerShare}</td>
         </tr>`;
     }).join('');
-  } catch (e){
+
+  } catch (e) {
     console.error(e);
     tbody.innerHTML = `<tr><td colspan="4" class="text-danger p-3">Load error</td></tr>`;
   }
-  document.getElementById('reloadHistory')
-    ?.addEventListener('click', renderHistoryTable, { once:true });
 }
 
 async function renderNetWorth() {
@@ -241,45 +312,50 @@ async function renderNetWorth() {
   }
 }
 
-async function renderPortfolio(){
+// Update the renderPortfolio function to include search functionality
+async function renderPortfolio(searchTicker = ''){
   const tbody = document.querySelector('#portfolioTable tbody');
   if(!tbody) return;
+  
   try {
     const rows = await fetchPortfolio();
-    if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="6" class="text-muted p-3">No data</td></tr>`;
+    
+    // Filter rows based on search input
+    const filteredRows = searchTicker 
+      ? rows.filter(r => r.ticker.toLowerCase().includes(searchTicker.toLowerCase()))
+      : rows;
+
+    if (!filteredRows.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-muted p-3">No matching holdings found</td></tr>`;
       return;
     }
-    tbody.innerHTML = rows.map(r => {
+
+    tbody.innerHTML = filteredRows.map(r => {
       const avgPrice = (r.avgPrice / 100).toFixed(2);
       const currentPrice = (r.currentPrice / 100).toFixed(2);
       const ticker = r.ticker || '';
       const quantity = r.quantity || 0;
       const profit = ((currentPrice - avgPrice)*quantity).toFixed(2);
       const profit_percentage = ((currentPrice-avgPrice)/avgPrice * 100).toFixed(2);
-      const totalValue = currentPrice * quantity;
-
+      const totalValue = (currentPrice * quantity).toFixed(2);
 
       return `
         <tr>
           <td>${ticker}</td>
-          <td class="text-end" >${quantity}</td>
-          <td class="text-end" >${avgPrice}</td>
-          <td class="text-end" >${currentPrice}</td>
+          <td class="text-end">${quantity}</td>
+          <td class="text-end">${avgPrice}</td>
+          <td class="text-end">${currentPrice}</td>
           <td class="text-end ${profit<0?'text-danger':'text-success'}">${profit}</td>
-          <td class="text-end ${profit<0?'text-danger':'text-success'}">${profit_percentage}\%</td>
+          <td class="text-end ${profit<0?'text-danger':'text-success'}">${profit_percentage}%</td>
           <td class="text-end"><b>${totalValue}</b></td>
         </tr>`;
     }).join('');
   } catch (e){
     console.error(e);
-    tbody.innerHTML = `<tr><td colspan="4" class="text-danger p-3">Load error</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="text-danger p-3">Load error</td></tr>`;
   }
-  document.getElementById('reloadPorfolio')
-    ?.addEventListener('click', renderPortfolio, { once:true });
 }
 
-// Add the rendering function
 async function renderHoldingsPieChart() {
   try {
     const response = await fetch("http://localhost:8080/portfolio");

@@ -2,7 +2,7 @@
 export async function fetchHistoryItems() {
   const resp = await fetch('/historyItem', { headers: { Accept: 'application/json' } });
   if (!resp.ok) throw new Error('HTTP ' + resp.status);
-  const data = await resp.json();
+  const data = (await resp.json()).reverse();
   return Array.isArray(data) ? data : [data];
 }
 
