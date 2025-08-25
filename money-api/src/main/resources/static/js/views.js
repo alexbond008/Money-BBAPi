@@ -78,10 +78,33 @@ register('/transactions', () => `
   </div>
 `);
 
+// Add the Holdings route registration
+register('/holdings', () => `
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between pb-0">
+          <div class="card-title mb-0">
+            <h5 class="m-0 me-2">Portfolio Holdings</h5>
+            <small class="text-muted">Current allocation of assets</small>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" id="reloadHoldings">
+            <i class='bx bx-refresh me-1'></i>Reload
+          </button>
+        </div>
+        <div class="card-body">
+          <div id="holdingsPieChart" class ="holdingsPieChart"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+`);
+
 export async function onViewRendered(path){
   if (path === '/transactions') renderHistoryTable();
   if (path === '/portfolios') renderPortfolio();
   if (path === '/') renderNetWorth();
+  if (path === '/holdings') renderHoldingsPieChart();
 }
 
 // Render function
@@ -254,6 +277,114 @@ async function renderPortfolio(){
   }
   document.getElementById('reloadPorfolio')
     ?.addEventListener('click', renderPortfolio, { once:true });
+}
+
+// Add the rendering function
+async function renderHoldingsPieChart() {
+  try {
+    const response = await fetch("http://localhost:8080/portfolio");
+    const data = await response.json();
+    
+    // Calculate total portfolio value for percentages
+    const totalValue = data.reduce((sum, item) => sum + item.totalValue, 0);
+    
+    const options = {
+      series: data.map(item => item.totalValue),
+      chart: {
+        type: 'pie',
+        height: 420,
+        fontFamily: 'Public Sans'
+      },
+      labels: data.map(item => item.ticker),
+      colors: [
+        '#696cff', // primary
+        '#71dd37', // success
+        '#03c3ec', // info
+        '#ffab00', // warning
+        '#ff3e1d', // danger
+        '#8592a3', // secondary
+        '#03c3ec', // info
+      ],
+      legend: {
+        position: 'bottom',
+        fontFamily: 'Public Sans',
+        labels: {
+          colors: '#697a8d',
+        },
+        markers: {
+          fillColors: '#696cff'
+        }
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            labels: {
+              show: true,
+              name: {
+                fontSize: '22px',
+                fontFamily: 'Public Sans'
+              },
+              value: {
+                fontSize: '16px',
+                fontFamily: 'Public Sans',
+                formatter: function(val) {
+                  return '$' + val.toFixed(2);
+                }
+              },
+              total: {
+                show: true,
+                fontSize: '16px',
+                fontFamily: 'Public Sans',
+                label: 'Total Value',
+                formatter: function(w) {
+                  return '$' + w.globals.seriesTotals.reduce((a, b) => a + b, 0).toFixed(2);
+                }
+              }
+            }
+          }
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function(val, opts) {
+          return opts.w.config.labels[opts.seriesIndex] + ': ' + (val * 100 / totalValue).toFixed(1) + '%';
+        },
+        style: {
+          fontSize: '14px',
+          fontFamily: 'Public Sans',
+          colors: ['#fff']
+        }
+      },
+      tooltip: {
+        theme: 'dark',
+        y: {
+          formatter: function(value) {
+            return '$' + value.toFixed(2) + ' (' + (value * 100 / totalValue).toFixed(1) + '%)';
+          }
+        }
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            height: 360
+          },
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }]
+    };
+
+    const chart = new ApexCharts(document.querySelector("#holdingsPieChart"), options);
+    await chart.render();
+
+  } catch (error) {
+    console.error('Error rendering holdings chart:', error);
+    document.getElementById('holdingsPieChart').innerHTML = `
+      <div class="alert alert-danger">Failed to load holdings data</div>
+    `;
+  }
 }
 
 // Default initial route if no hash
