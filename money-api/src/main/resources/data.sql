@@ -280,4 +280,7 @@ INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22602, -50
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22613, 100, TIMESTAMP'2025-07-14', 'AMZN');
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22653, -50, TIMESTAMP'2025-07-15', 'AMZN');
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-07-21', 'AMZN');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-07-29', 'META');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-08-01', 'NVDA');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-08-06', 'MSFT');
 
