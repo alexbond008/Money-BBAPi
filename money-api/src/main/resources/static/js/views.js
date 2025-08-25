@@ -8,15 +8,22 @@ export function resolve(path){ return routes[path] || routes['/transactions']; }
 
 // Single route: /
 register('/', () => `
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0">Net Worth History</h4>
-  </div>
-  <div class="card">
-    <div style="width: 1fr;"><canvas id="netWorth"></canvas></div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between pb-0">
+          <div class="card-title mb-0">
+            <h5 class="m-0 me-2">Net Worth History</h5>
+            <small class="text-muted">Financial performance over time</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="netWorthChart"></div>
+        </div>
+      </div>
     </div>
   </div>
 `);
-
 
 // Single route: /transactions
 register('/transactions', () => `
@@ -78,27 +85,109 @@ async function renderHistoryTable(){
     ?.addEventListener('click', renderHistoryTable, { once:true });
 }
 
-chartlib.Chart.register(...chartlib.registerables);
 async function renderNetWorth() {
-  const response = await fetch("http://localhost:8080/netWorth");
-  const data = await response.json();
-  console.log(data);
-  new chartlib.Chart(
-    document.getElementById('netWorth'),
-    {
-      type: 'line',
-      data: {
-        labels: data.map(row => row.calculatedAt.slice(0,10)),
-        datasets: [
-          {
-            label: 'Net Worth',
-            data: data.map(row => row.amount/100)
+  try {
+    const response = await fetch("http://localhost:8080/netWorth");
+    const data = await response.json();
+
+    const options = {
+      series: [{
+        name: 'Net Worth',
+        data: data.map(row => ({
+          x: new Date(row.calculatedAt).getTime(),
+          y: row.amount/100
+        }))
+      }],
+      chart: {
+        height: 350,
+        type: 'area',
+        toolbar: {
+          show: false
+        },
+        fontFamily: 'Public Sans'
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'smooth',
+        width: 3
+      },
+      grid: {
+        borderColor: '#e7e7e7',
+        row: {
+          colors: ['transparent'],
+          opacity: 0.5
+        }
+      },
+      xaxis: {
+        type: 'datetime',
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        }
+      },
+      yaxis: {
+        labels: {
+          formatter: function(value) {
+            return '$' + value.toFixed(2)
           }
-        ]
+        }
+      },
+      colors: ['#696cff'],
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shadeIntensity: 1,
+          opacityFrom: 0.7,
+          opacityTo: 0.3,
+          stops: [0, 90, 100]
+        }
+      },
+      tooltip: {
+        shared: false,
+        x: {
+          format: 'MMM dd, yyyy HH:mm'
+        },
+        y: {
+          formatter: function(value) {
+            return '$' + value.toFixed(2)
+          }
+        },
+        theme: 'dark',
+        marker: {
+          show: true
+        }
+      },
+      markers: {
+        size: 4,
+        colors: ['#696cff'],
+        strokeColors: '#fff',
+        strokeWidth: 2,
+        hover: {
+          size: 7,
+          sizeOffset: 3
+        }
       }
-    }
-  );
-};
+    };
+
+    // Clean up any existing chart
+    const chartElement = document.getElementById('netWorthChart');
+    chartElement.innerHTML = '';
+
+    // Create new ApexCharts instance
+    const chart = new ApexCharts(chartElement, options);
+    chart.render();
+
+  } catch (error) {
+    console.error('Error rendering net worth chart:', error);
+    document.getElementById('netWorthChart').innerHTML = `
+      <div class="alert alert-danger">Failed to load chart data</div>
+    `;
+  }
+}
 
 // Default initial route if no hash
 if (!location.hash) location.hash = '#/transactions';
