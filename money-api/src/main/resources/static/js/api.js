@@ -27,25 +27,22 @@ export function mapHistoryItem(raw){
 
 async function fetchAndDisplayCash() {
   try {
-    const now = new Date();
-    const localDateTime = now.toISOString().slice(0, 19);
-    console.log(localDateTime);
-
-    // Fetch data from the getAllCash() endpoint
-    const response = await fetch(`/cash/latest/${localDateTime}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch cash data');
-    }
-
-    const data = await response.json();
-
-    console.log('Fetched cash data:', data);
-  } catch (error) {
-    console.error('Error fetching cash data:', error);
-    document.getElementById('cashBar').textContent =
-      'Failed to load cash data.';
+    const resp = await fetch('/cash/latest');
+    if (!resp.ok) throw new Error('cash fetch ' + resp.status);
+    const data = await resp.json();
+    const el = document.getElementById('cashBar');
+    if (el) el.textContent = data ? `Cash: ${formatCents(data.amount)}` : 'No cash data';
+  } catch (e) {
+    console.error(e);
+    const el = document.getElementById('cashBar');
+    if (el) el.textContent = 'Cash load error';
   }
 }
 
-// Fetch and display cash data when the page loads
+function formatCents(v){
+  if (v == null) return '-';
+  return '$' + (v/100).toFixed(2);
+}
+
+// Auto-run once DOM ready
 document.addEventListener('DOMContentLoaded', fetchAndDisplayCash);

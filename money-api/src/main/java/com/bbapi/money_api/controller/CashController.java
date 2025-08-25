@@ -39,16 +39,21 @@ public class CashController {
     }
 
     @GetMapping("/latest/{id}")
-    public CashWorth getLatestCashById(@PathVariable LocalDateTime id) {
+    public CashWorth getLatestCashById(
+            @PathVariable
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime id) {
         return cashService.getLatestCashById(id);
+    }
+
+    @GetMapping("/latest")
+    public CashWorth getLatest() {
+        return cashService.getLatestCash();
     }
 
     @PostMapping(path = "/add")
     public CashWorth addCash(@RequestBody CashWorth entity) {
         return cashService.addCash(entity);
     }
-
-
 
     @DeleteMapping("/{id}")
     public void deletCash(@PathVariable LocalDateTime id) {

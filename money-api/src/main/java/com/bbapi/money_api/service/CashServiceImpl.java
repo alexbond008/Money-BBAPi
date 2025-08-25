@@ -29,7 +29,7 @@ public class CashServiceImpl implements CashService{
 
     @Override
     public CashWorth getCashById(LocalDateTime id) {
-        return cashRepository.findLatestById(id).orElse(null);
+        return cashRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -39,10 +39,13 @@ public class CashServiceImpl implements CashService{
 
     @Override
     public CashWorth getLatestCashById(LocalDateTime id) {
-        return cashRepository.findLatestById(id).orElse(null);
+        // try <= given timestamp, else absolute latest
+        return cashRepository.findLatestById(id)
+                .orElseGet(() -> cashRepository.findTopByOrderByCalculatedAtDesc().orElse(null));
     }
 
-    
-
-    
+    @Override
+    public CashWorth getLatestCash() {
+        return cashRepository.findTopByOrderByCalculatedAtDesc().orElse(null);
+    }
 }
