@@ -4,18 +4,18 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "net_worth")
-public class NetWorth {
+@Table(name = "cash_worth")
+public class CashWorth {
 
     @Id
     @Column(nullable = false)
     private LocalDateTime calculatedAt;
 
-    private Integer amount; // store in cents
+    private Integer amount;
 
-    public NetWorth() {}
+    public CashWorth() {}
 
-    public NetWorth(LocalDateTime calculatedAt, Integer amount) {
+    public CashWorth(LocalDateTime calculatedAt, Integer amount) {
         this.calculatedAt = calculatedAt;
         this.amount = amount;
     }
@@ -25,4 +25,3 @@ public class NetWorth {
     public Integer getAmount() { return amount; }
     public void setAmount(Integer amount) { this.amount = amount; }
 }
-

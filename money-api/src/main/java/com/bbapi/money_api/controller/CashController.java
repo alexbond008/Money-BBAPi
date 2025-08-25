@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bbapi.money_api.entity.NetWorth;
+import com.bbapi.money_api.entity.CashWorth;
 import com.bbapi.money_api.service.CashService;
-import com.bbapi.money_api.service.NetWorthService;
 
 @CrossOrigin
 @RestController
@@ -29,17 +28,17 @@ public class CashController {
     }
 
     @GetMapping()
-    public List<NetWorth> getAllCash() {
+    public List<CashWorth> getAllCash() {
         return cashService.getAllCashEntries();
     }
 
     @GetMapping("/{id}")
-    public NetWorth getCashById(@RequestParam LocalDateTime id) {
+    public CashWorth getCashById(@RequestParam LocalDateTime id) {
         return cashService.getCashById(id);
     }
 
     @PostMapping(path = "/add")
-    public NetWorth addCash(@RequestBody NetWorth entity) {
+    public CashWorth addCash(@RequestBody CashWorth entity) {
         return cashService.addCash(entity);
     }
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.bbapi.money_api.entity.NetWorth;
+import com.bbapi.money_api.entity.CashWorth;
 import com.bbapi.money_api.repository.CashRepository;
 @Service
 public class CashServiceImpl implements CashService{
@@ -18,18 +18,18 @@ public class CashServiceImpl implements CashService{
     }
 
     @Override
-    public List<NetWorth> getAllCashEntries() {
+    public List<CashWorth> getAllCashEntries() {
         return cashRepository.findAll();
     }
 
     @Override
-    public NetWorth addCash(NetWorth netWorth) {
-        return cashRepository.save(netWorth);
+    public CashWorth addCash(CashWorth cashWorth) {
+        return cashRepository.save(cashWorth);
     }
 
     @Override
-    public NetWorth getCashById(LocalDateTime id) {
-        return cashRepository.findById(id).orElse(null);
+    public CashWorth getCashById(LocalDateTime id) {
+        return cashRepository.findLatestById(id).orElse(null);
     }
 
     @Override

@@ -29,6 +29,9 @@ public class NetWorthServiceImpl implements NetWorthService {
 
     @Override
     public NetWorth addNetWorth(NetWorth netWorth) {
+        if (netWorth.getCalculatedAt() == null) {
+            throw new IllegalArgumentException("calculatedAt (id) must not be null");
+        }
         return netWorthRepository.save(netWorth);
     }
 

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -36,6 +38,12 @@ public class StockPriceController {
         return stockPriceService.getAllStockPrices();
     }
 
+    @GetMapping("path")
+    public String getMethodName(@RequestParam String param) {
+        return new String();
+    }
+    
+
     @GetMapping("/{ticker}/{timestamp}")
     public StockPrice getStockPriceById(@PathVariable String ticker, @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date timestamp) {
         return stockPriceService.getStockPriceById(ticker, timestamp);
@@ -45,11 +53,6 @@ public class StockPriceController {
     public StockPrice addStockPrice(@RequestBody StockPrice entity) {
         return stockPriceService.addStockPrice(entity);
     }
-
-    // @PutMapping("/{id}")
-    // public StockPrice updateStockPrice(@PathVariable StockPriceId id, @RequestBody StockPrice entity) {
-        
-    // }
 
     @DeleteMapping("/{id}")
     public void deleteStockPrice(@PathVariable StockPriceId id) {
