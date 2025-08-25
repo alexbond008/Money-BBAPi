@@ -39,8 +39,11 @@ public class NetWorthCalculator {
 
         @EventListener(ApplicationReadyEvent.class)
         public void doSomethingAfterStartup() {
+            calculateNetWorth(new GregorianCalendar(2024,8,7));
+        }
 
-            Calendar startDate = new GregorianCalendar(2024,8,7);
+        public void calculateNetWorth(Calendar startDate) {
+            netWorthService.deleteAllNetWorthsNewerThan(LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()));
             Calendar currentDate = new GregorianCalendar();
             Calendar i = new GregorianCalendar(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
             do {
