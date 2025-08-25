@@ -12,7 +12,9 @@ public interface HistoryItemService {
 
     public HistoryItem addHistoryItem(HistoryItem historyItem);
 
-    // public String updateHistoryItem(String historyItem);
+    public List<HistoryItem> getAllCashHistoryItems();
+
+    public List<HistoryItem> getAllCashHistoryItemsOlderThan(Date date);
 
     public void deleteHistoryItem(HistoryItemId id);
 

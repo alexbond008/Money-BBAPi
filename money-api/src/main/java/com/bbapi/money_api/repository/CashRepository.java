@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.bbapi.money_api.entity.NetWorth;
 
 @Repository
-public interface NetWorthRepository extends JpaRepository<NetWorth, LocalDateTime>{
+public interface CashRepository extends JpaRepository<NetWorth, LocalDateTime> {
+
+    
 }

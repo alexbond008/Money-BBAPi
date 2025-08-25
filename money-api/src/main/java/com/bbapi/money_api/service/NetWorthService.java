@@ -6,6 +6,7 @@ import java.util.List;
 import com.bbapi.money_api.entity.NetWorth;
 
 public interface NetWorthService {
+
     public List<NetWorth> getAllNetWorths();
     public NetWorth getNetWorthById(LocalDateTime id);
     public NetWorth addNetWorth(NetWorth netWorth);

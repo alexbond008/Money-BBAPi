@@ -22,6 +22,9 @@ public class HistroyItemServiceImpl implements HistoryItemService {
     public List<HistoryItem> getAllHistoryItems() {
         return historyItemRepository.findAll();
     }
+    public List<HistoryItem> getAllCashHistoryItems() {
+        return historyItemRepository.findByTicker(CashService.CASH_TICKER);
+    }
     @Override
     public HistoryItem getHistoryItemById(String ticker, Date timestamp) {
         return historyItemRepository.findById(ticker, timestamp);
@@ -40,5 +43,11 @@ public class HistroyItemServiceImpl implements HistoryItemService {
     @Override
     public List<HistoryItem> getAllHistoryItemsOlderThan(Date date) {
         return historyItemRepository.getOlderThan(date);    
+    }
+
+    @Override
+    public List<HistoryItem> getAllCashHistoryItemsOlderThan(Date date) {
+        // TODO Auto-generated method stub
+        return historyItemRepository.getCashOlderThan(date);
     }
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.bbapi.money_api.entity.HistoryItem;
 import com.bbapi.money_api.entity.NetWorth;
 import com.bbapi.money_api.entity.StockPriceId;
+import com.bbapi.money_api.service.CashService;
 import com.bbapi.money_api.service.HistoryItemService;
 import com.bbapi.money_api.service.NetWorthService;
 import com.bbapi.money_api.service.StockPriceService;
@@ -47,6 +48,10 @@ public class NetWorthCalculator {
                 Map<String, List<HistoryItem>> groupedByTicker = historyItems.stream().collect(Collectors.groupingBy(HistoryItem::getTicker));
                 Integer currentNetWorth = 0;
                 for (String key : groupedByTicker.keySet()) {
+                    if (key.equals(CashService.CASH_TICKER)) {
+                        //currentNetWorth += groupedByTicker.get(key).stream().mapToInt(HistoryItem::getQuantity).sum();
+                        continue;
+                    }
                     Integer quantity = groupedByTicker.get(key).stream().mapToInt(HistoryItem::getQuantity).sum();
                     Integer price  = stockPriceService.getLatestStockPriceById(new StockPriceId(key, i.getTime())).getPrice();
                     currentNetWorth += quantity*price;
