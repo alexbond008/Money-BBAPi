@@ -1,69 +1,144 @@
 # Money-BBAPi
 
-Lightweight personal portfolio & net worth tracker (Spring Boot + Maven).
+Lightweight personal portfolio & net worth tracker with real-time visualization (Spring Boot + Maven).
 
 ## Tech Stack
+
+### Backend
 - Java 17, Spring Boot 3 (Web, Data JPA)
 - H2 in‑memory DB (dev)
-- Entities: `HistoryItem`, `NetWorth`, `StockPrice`
-- Repos: `HistoryItemRepository`, `NetWorthRepository`, `StockPriceRepository`
-- Service layer: `PortfolioService` (+ future services)
-- DTO/helper: `PortfolioItem`
-- Static UI prototype in `src/main/resources/static`
+- RESTful API endpoints
+- Service-oriented architecture
 
----
+### Frontend
+- Vanilla JavaScript with modules
+- Sneat Bootstrap Admin Template
+- ApexCharts for data visualization
+- Responsive design with Bootstrap 5
 
-## Domain Model (MVP)
+## Features
 
-| Concept | Purpose | Backing class |
-|---------|---------|---------------|
-| Transaction / History | Raw buy/sell events (quantity (+/-), price, timestamp) | `HistoryItem` (+ `HistoryItemId`) |
-| Position (derived) | Aggregated shares held & avg cost per ticker | Built in `PortfolioServiceImpl` → `PortfolioItem` |
-| Net Worth snapshot | Point-in-time total value (cash + positions) | `NetWorth` |
-| Price history | Per‑ticker historical prices (for PnL / charts) | `StockPrice` (+ `StockPriceId`) |
+- 📊 Real-time portfolio tracking
+- 📈 Net worth visualization
+- 🔄 Transaction management
+- 🔍 Search functionality for transactions and holdings
+- 📱 Responsive mobile-friendly interface
+- 💰 Real-time profit/loss calculations
+- 📉 Holdings distribution visualization
 
----
+## Components
 
-## MVP Endpoints
+### Backend Entities
+- `HistoryItem`: Transaction records
+- `NetWorth`: Point-in-time portfolio valuations
+- `StockPrice`: Historical price data
+- `PortfolioItem`: Current holdings representation
 
-Base path suggestion: `/api` (current code uses `/portfolio` without `/api`; adjust later).
+### Frontend Structure
+- Dynamic routing system
+- Real-time search functionality
+- Interactive charts
+- Transaction management interface
+- Responsive data tables
 
-| Endpoint | Method | Returns | Description |
-|----------|--------|---------|-------------|
-| `/portfolio` | GET | `List<PortfolioItem>` | Current open positions (qty, avg cost, current price, profit calc client-side) |
-| `/networth` | GET | `List<NetWorth>` or latest only | Historical or latest net worth snapshots |
-| `/networth/latest` | GET | `NetWorth` | Convenience latest snapshot |
-| `/prices/{ticker}` | GET | `List<StockPrice>` | Raw price bars stored (optional filter by date range) |
-| `/portfolio/history/{ticker}` | GET | Time series of position size & cost basis | For position chart |
-| `/health` (optional) | GET | `{status:"UP"}` | Simple liveness |
+## API Endpoints
 
-Planned computation:
-- Positions: aggregate `HistoryItem` rows (buy qty > 0 increases qty & cost basis; sell qty < 0 reduces qty & proportional cost).
-- Net worth: sum(positionQty * latestPrice) + (future cash ledger) → persisted periodically as `NetWorth`.
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/portfolio` | GET | Returns current portfolio holdings with calculated metrics |
+| `/netWorth` | GET | Retrieves net worth history for charting |
+| `/historyItem` | POST | Adds new transaction |
+| `/historyItem` | GET | Returns transaction history |
 
----
+### Sample Responses
 
-### Example POST request
-
-curl -X POST http://localhost:8080/historyItem/add \
-  -H "Content-Type: application/json" \
-  -d '{"ticker":"AAPL","quantity":10,"price":189,"timestamp":"2025-08-22T12:00:00Z"}'
-
-
-
-
----
-
-### Sample JSON
-
-`GET /portfolio`
+#### GET /portfolio
 ```json
 [
-  { "ticker":"AAPL","quantity":25,"avgPrice":142,"currentPrice":150 },
-  { "ticker":"MSFT","quantity":10,"avgPrice":315,"currentPrice":328 }
+  {
+    "ticker": "AAPL",
+    "quantity": 10,
+    "avgPrice": 15000,
+    "currentPrice": 17500,
+    "totalValue": 175000
+  }
 ]
 ```
 
-^^ this is up to edit (in case we want total profit, %profit)
+#### POST /historyItem
+```json
+{
+  "ticker": "AAPL",
+  "quantity": 10,
+  "price": 15000,
+  "timestamp": "2025-08-22"
+}
+```
 
-*add CRUD transactions for endpoint to edit historical performance
+## Features in Detail
+
+### Portfolio View
+- Real-time holdings overview
+- Profit/loss calculations
+- Search functionality
+- Interactive data refresh
+
+### Transaction Management
+- Add new transactions
+- View transaction history
+- Search transactions by ticker
+- Real-time updates
+
+### Net Worth Tracking
+- Historical net worth visualization
+- Interactive timeline
+- Tooltip details for specific dates
+
+### Holdings Distribution
+- Pie chart visualization
+- Percentage allocation view
+- Interactive legend
+- Real-time updates
+
+## Getting Started
+
+1. Clone the repository
+2. Ensure Java 17 is installed
+3. Run `mvn spring-boot:run`
+4. Access the application at `http://localhost:8080`
+
+## Development
+
+### Project Structure
+```
+money-api/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com.bbapi.money_api/
+│   │   │       ├── controller/
+│   │   │       ├── service/
+│   │   │       ├── repository/
+│   │   │       └── entity/
+│   │   └── resources/
+│   │       └── static/
+│   │           ├── js/
+│   │           │   ├── views.js
+│   │           │   └── api.js
+│   │           └── index.html
+│   └── test/
+└── pom.xml
+```
+
+## Future Enhancements
+
+- [ ] User authentication
+- [ ] Multiple portfolio support
+- [ ] Export functionality
+- [ ] Advanced analytics
+- [ ] Price alerts
+- [ ] Custom date ranges for reports
+
+## Contributing
+
+Contributions welcome! Please feel free to submit a Pull Request.

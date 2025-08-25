@@ -24,3 +24,28 @@ export function mapHistoryItem(raw){
     price: raw.price >= 1000 ? raw.price / 100 : raw.price
   };
 }
+
+async function fetchAndDisplayCash() {
+  try {
+    const now = new Date();
+    const localDateTime = now.toISOString().slice(0, 19);
+    console.log(localDateTime);
+
+    // Fetch data from the getAllCash() endpoint
+    const response = await fetch(`/cash/latest/${localDateTime}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch cash data');
+    }
+
+    const data = await response.json();
+
+    console.log('Fetched cash data:', data);
+  } catch (error) {
+    console.error('Error fetching cash data:', error);
+    document.getElementById('cashBar').textContent =
+      'Failed to load cash data.';
+  }
+}
+
+// Fetch and display cash data when the page loads
+document.addEventListener('DOMContentLoaded', fetchAndDisplayCash);
