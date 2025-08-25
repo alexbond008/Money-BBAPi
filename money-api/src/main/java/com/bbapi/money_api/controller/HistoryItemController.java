@@ -42,7 +42,7 @@ public class HistoryItemController {
         return historyItemService.getHistoryItemById(ticker, timestamp);
     }
 
-    @PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
+    @PostMapping()
         public ResponseEntity<HistoryItem> addHistoryItem(@RequestBody HistoryItem entity) {
         HistoryItem saved = historyItemService.addHistoryItem(entity);
         return ResponseEntity.status(201).body(saved);
