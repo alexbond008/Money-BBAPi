@@ -6,6 +6,13 @@ export async function fetchHistoryItems() {
   return Array.isArray(data) ? data : [data];
 }
 
+export async function fetchStockPrices() {
+  const resp = await fetch('/stockPrice/latest', { headers: { Accept: 'application/json' } });
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  const data = (await resp.json()).reverse();
+  return Array.isArray(data) ? data : [data];
+}
+
 export async function fetchPortfolio() {
   const resp = await fetch('/portfolio', { headers: { Accept: 'application/json' } });
   if (!resp.ok) throw new Error('HTTP ' + resp.status);

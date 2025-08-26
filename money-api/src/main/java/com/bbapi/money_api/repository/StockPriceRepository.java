@@ -18,4 +18,7 @@ public interface StockPriceRepository extends JpaRepository<StockPrice,StockPric
 
     @Query("SELECT s FROM StockPrice s WHERE s.ticker = ?1 AND s.timestamp <= ?2 ORDER BY s.timestamp DESC LIMIT 1")
     public java.util.Optional<StockPrice> findLatestById(String ticker, Date timestamp);
+
+    @Query("SELECT s FROM StockPrice s WHERE s.timestamp IN (SELECT MAX(s2.timestamp) FROM StockPrice s2 GROUP BY s2.ticker)")
+    public java.util.List<StockPrice> getLatest();
 }

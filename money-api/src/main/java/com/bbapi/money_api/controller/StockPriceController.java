@@ -38,6 +38,11 @@ public class StockPriceController {
         return stockPriceService.getAllStockPrices();
     }
 
+    @GetMapping("/latest")
+    public List<StockPrice> getLatestStockPrices() {
+        return stockPriceService.getLatestStockPrices();
+    }
+
     @GetMapping("path")
     public String getMethodName(@RequestParam String param) {
         return new String();

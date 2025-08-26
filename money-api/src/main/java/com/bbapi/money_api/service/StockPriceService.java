@@ -9,6 +9,7 @@ import com.bbapi.money_api.entity.StockPriceId;
 public interface StockPriceService {
 
     public List<StockPrice> getAllStockPrices();
+    public List<StockPrice> getLatestStockPrices();
     public StockPrice getStockPriceById(String ticker, Date timestamp);
     public StockPrice getLatestStockPriceById(StockPriceId id);
     public StockPrice addStockPrice(StockPrice stockPrice);

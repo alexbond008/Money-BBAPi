@@ -1,5 +1,5 @@
 // Simplified: remove unused portfolio/recent widgets; focus on history table
-import { fetchHistoryItems, fetchPortfolio, fetchAndDisplayCash } from './api.js';
+import { fetchHistoryItems, fetchPortfolio, fetchAndDisplayCash, fetchStockPrices } from './api.js';
 import * as chartlib from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.6/+esm';
 
 const bootstrap = window.bootstrap;
@@ -122,6 +122,45 @@ register('/transactions', () => `
   </div>
 `);
 
+// Single route: /stocks
+register('/stocks', () => `
+  <div class="card">
+    <div class="card-header border-bottom">
+      <div class="d-flex justify-content-between align-items-center row">
+        <div class="col-md-4">
+          <h5 class="card-title mb-0">Stock Prices</h5>
+        </div>
+        <div class="col-md-4">
+          <div class="input-group input-group-merge">
+            <span class="input-group-text"><i class="bx bx-search"></i></span>
+            <input type="text" 
+                   id="stockSearch" 
+                   class="form-control" 
+                   placeholder="Search ticker..."
+                   aria-label="Search stocks">
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <button class="btn btn-sm btn-outline-secondary" id="reloadStocks">
+            <i class='bx bx-refresh me-1'></i>Reload
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped mb-0" id="stockTable">
+        <thead class="table-light">
+          <tr>
+            <th>Ticker</th>
+            <th class="text-end">Price / Share</th>
+          </tr>
+        </thead>
+        <tbody><tr><td colspan="4" class="text-muted p-3">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+`);
+
 // Add the Holdings route registration
 register('/holdings', () => `
   <div class="row">
@@ -229,6 +268,7 @@ export async function onViewRendered(path){
   }
   if (path === '/') renderNetWorth();
   if (path === '/holdings') renderHoldingsPieChart();
+  if (path === '/stocks') renderStockPrices();
 }
 
 // Render function
@@ -257,6 +297,40 @@ async function renderHistoryTable(searchTicker = '') {
           <td>${date}</td>
           <td>${r.ticker == 'MONEY' ? 'CASH TRANSFER' : r.ticker}</td>
           <td class="text-end ${r.quantity<0?'text-danger':'text-success'}">${r.quantity}</td>
+          <td class="text-end">${pricePerShare}</td>
+        </tr>`;
+    }).join('');
+
+  } catch (e) {
+    console.error(e);
+    tbody.innerHTML = `<tr><td colspan="4" class="text-danger p-3">Load error</td></tr>`;
+  }
+}
+
+async function renderStockPrices(searchTicker = '') {
+  const tbody = document.querySelector('#stockTable tbody');
+  if(!tbody) return;
+
+  try {
+    const rows = await fetchStockPrices();
+    
+    // Filter rows based on search input
+    const filteredRows = searchTicker 
+      ? rows.filter(r => r.ticker.toLowerCase().includes(searchTicker.toLowerCase()))
+      : rows;
+
+    if (!filteredRows.length) {
+      tbody.innerHTML = `<tr><td colspan="4" class="text-muted p-3">No matching stocks found</td></tr>`;
+      return;
+    }
+    var tickers = {};
+    tbody.innerHTML = filteredRows.map(r => {
+      const pricePerShare = r.price >= 1000 ? (r.price / 100).toFixed(2) : r.price;
+      if(tickers[r.ticker]) return '';
+      tickers[r.ticker]= true;
+      return `
+        <tr>
+          <td>${r.ticker == 'MONEY' ? 'CASH TRANSFER' : r.ticker}</td>
           <td class="text-end">${pricePerShare}</td>
         </tr>`;
     }).join('');

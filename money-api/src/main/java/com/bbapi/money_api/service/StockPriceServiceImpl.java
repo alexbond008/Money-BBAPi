@@ -48,4 +48,9 @@ public class StockPriceServiceImpl implements StockPriceService {
         stockPriceRepository.deleteById(id);
     }
 
+    @Override
+    public List<StockPrice> getLatestStockPrices() {
+        return stockPriceRepository.getLatest();
+    }
+
 }
