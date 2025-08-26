@@ -15,4 +15,4 @@ public interface CashService {
     public CashWorth getLatestCash();
     public void deleteCash(LocalDateTime id);  
     public void deleteAllCash();  
-}
+};

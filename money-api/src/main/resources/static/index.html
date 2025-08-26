@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Money-BBAPi — Admin</title>
   <meta name="description" content="Money-BBAPi admin UI starter powered by Sneat Bootstrap 5" />
+  <!-- ...inside <head> BEFORE loading external CSS add this tiny inline script... -->
+  <script>
+    (function(){
+      try{
+        const s = JSON.parse(localStorage.getItem('appSettings')||'{}');
+        if (s.theme === 'dark'){
+          document.documentElement.classList.remove('light-style');
+          document.documentElement.classList.add('dark-style');
+          document.addEventListener('DOMContentLoaded', ()=>document.body.classList.add('dark-mode'));
+        }
+      }catch(e){}
+    })();
+  </script>
   <!-- Sneat Free (via jsDelivr) -->
   <!-- NOTE: If you purchase PRO, replace these with PRO assets -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
@@ -231,3 +244,4 @@
   </script>
 </body>
 </html>
+``` 

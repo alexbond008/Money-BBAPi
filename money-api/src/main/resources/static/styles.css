@@ -28,3 +28,16 @@ a { text-decoration:none; }
 @media (max-width: 992px) {
   .layout-menu { box-shadow: 0 0 0 1px var(--card-border); }
 }
+body.dark-mode {
+  --bs-body-bg: #1d1f23;
+  --bs-body-color: #e2e6ea;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+body.dark-mode .card {
+  background-color: #24272c;
+  color: #e2e6ea;
+}
+body.dark-mode .table {
+  color: #e2e6ea;
+}
