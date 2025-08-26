@@ -48,4 +48,9 @@ public class CashServiceImpl implements CashService{
     public CashWorth getLatestCash() {
         return cashRepository.findTopByOrderByCalculatedAtDesc().orElse(null);
     }
+
+    @Override
+    public void deleteAllCash() {
+        cashRepository.deleteAll();
+    }
 }

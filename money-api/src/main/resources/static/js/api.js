@@ -25,7 +25,7 @@ export function mapHistoryItem(raw){
   };
 }
 
-async function fetchAndDisplayCash() {
+export async function fetchAndDisplayCash() {
   try {
     const cashResp = await fetch('/cash/latest');
     if (!cashResp.ok) throw new Error('cash fetch ' + cashResp.status);

@@ -33,8 +33,8 @@ public class CashCalculator {
 
         @EventListener(ApplicationReadyEvent.class)
         public void doSomethingAfterStartup() {
-
-            Calendar startDate = new GregorianCalendar(2024,8,7);
+            cashService.deleteAllCash();
+            Calendar startDate = new GregorianCalendar(2025,8,26);
             Calendar currentDate = new GregorianCalendar();
             Calendar i = new GregorianCalendar(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH));
             do {

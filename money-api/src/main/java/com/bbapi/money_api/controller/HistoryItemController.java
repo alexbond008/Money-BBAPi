@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bbapi.money_api.entity.HistoryItem;
 import com.bbapi.money_api.entity.HistoryItemId;
+import com.bbapi.money_api.helper_classes.CashCalculator;
 import com.bbapi.money_api.helper_classes.NetWorthCalculator;
 import com.bbapi.money_api.service.HistoryItemService;
 
@@ -30,8 +31,10 @@ public class HistoryItemController {
 
     private final HistoryItemService historyItemService;
     private final NetWorthCalculator netWorthCalculator;
+    private final CashCalculator cashCalculator;
 
-    public HistoryItemController(HistoryItemService historyItemService, NetWorthCalculator netWorthCalculator) {
+    public HistoryItemController(HistoryItemService historyItemService, NetWorthCalculator netWorthCalculator, CashCalculator cashCalculator) {
+        this.cashCalculator = cashCalculator;
         this.historyItemService = historyItemService;
         this.netWorthCalculator = netWorthCalculator;
     }
@@ -52,6 +55,7 @@ public class HistoryItemController {
         Calendar cal = Calendar.getInstance();
         cal.setTime(entity.getTimestamp());
         netWorthCalculator.calculateNetWorth(cal);
+        cashCalculator.doSomethingAfterStartup();
         return ResponseEntity.status(201).body(saved);
     }
 

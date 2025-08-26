@@ -13,5 +13,6 @@ public interface CashService {
     public CashWorth getCashById(LocalDateTime id);
     public CashWorth getLatestCashById(LocalDateTime id);
     public CashWorth getLatestCash();
-    public void deleteCash(LocalDateTime id);    
+    public void deleteCash(LocalDateTime id);  
+    public void deleteAllCash();  
 }

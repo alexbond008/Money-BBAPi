@@ -1,5 +1,5 @@
 // Simplified: remove unused portfolio/recent widgets; focus on history table
-import { fetchHistoryItems, fetchPortfolio } from './api.js';
+import { fetchHistoryItems, fetchPortfolio, fetchAndDisplayCash } from './api.js';
 import * as chartlib from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.6/+esm';
 
 const bootstrap = window.bootstrap;
@@ -591,6 +591,7 @@ document.getElementById('depositForm')?.addEventListener('submit', async (e) => 
       const modal = bootstrap.Modal.getInstance(document.getElementById('depositModal'));
       document.getElementsByClassName('modal-backdrop fade show')[0]?.remove();
       modal.hide();
+      fetchAndDisplayCash();
       successAlert.classList.add('d-none');
     }, 2000);
 
