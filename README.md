@@ -1,7 +1,8 @@
 # Money-BBAPi
 
 Lightweight personal portfolio & net worth tracker with real-time visualization (Spring Boot + Maven).
-<img width="1024" height="1024" alt="ChatGPT Image Aug 26, 2025, 01_07_42 PM" src="https://github.com/user-attachments/assets/c8710466-f83e-46cc-b179-20548fb0f8d7" />
+<img width="500" height="500" alt="Untitled design" src="https://github.com/user-attachments/assets/17e970d5-7991-4e28-b065-9f03ef4809e5" />
+
 
 ## Tech Stack
 
