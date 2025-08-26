@@ -54,6 +54,7 @@ public class HistoryItemController {
         HistoryItem saved = historyItemService.addHistoryItem(entity);
         Calendar cal = Calendar.getInstance();
         cal.setTime(entity.getTimestamp());
+        cal.add(Calendar.DAY_OF_YEAR, -1);
         netWorthCalculator.calculateNetWorth(cal);
         cashCalculator.doSomethingAfterStartup();
         return ResponseEntity.status(201).body(saved);
