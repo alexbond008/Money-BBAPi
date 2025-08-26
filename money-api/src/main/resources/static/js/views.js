@@ -554,14 +554,16 @@ document.getElementById('depositForm')?.addEventListener('submit', async (e) => 
       throw new Error('Amount must be positive');
     }
 
-    const response = await fetch('http://localhost:8080/cash/add', {
+    const response = await fetch('http://localhost:8080/historyItem', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        calculatedAt: new Date().toISOString(),
-        amount: amountInCents
+        timestamp: new Date().toISOString(),
+        price: amountInCents,
+        ticker: 'MONEY',
+        quantity: 1
       })
     });
 
