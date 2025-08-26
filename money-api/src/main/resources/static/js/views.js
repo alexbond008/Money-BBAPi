@@ -267,14 +267,24 @@ async function renderHistoryTable(searchTicker = '') {
   }
 }
 
-async function renderNetWorth(range = '1y') {
+async function renderNetWorth(timeframe = '1y') {
   try {
     const response = await fetch("http://localhost:8080/netWorth");
-    const data = await response.json();
+    var data = await response.json();
+    if(timeframe == '1y' || timeframe == '3m'){
+      data = data.filter(row => new Date(row.calculatedAt).getHours() == 0);
+    }
+    if(timeframe == '1m' || timeframe == '1w'){
+      data = data.filter(row => new Date(row.calculatedAt).getMinutes() == 0);
+    }
+    if(timeframe == '1m'){
+      data = data.filter(row => new Date(row.calculatedAt).getHours() % 4 == 0);
+    }
     console.log(data.map(row => ({
       x: new Date(row.calculatedAt).getTime(),
       y: row.amount/100
     })));
+    
     const options = {
       series: [{
         name: 'Net Worth',
@@ -376,7 +386,7 @@ async function renderNetWorth(range = '1y') {
     }))
     const end = new Date(new_data[new_data.length - 1].x);
     let start;
-    switch (range) {
+    switch (timeframe) {
       case '1d':
         start = new Date(end.getTime() - 1 * 24 * 60 * 60 * 1000);
         break;

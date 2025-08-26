@@ -55,7 +55,7 @@ public class AlpacaAPIClient {
 
         // Create the request with the necessary headers
         Request request = new Request.Builder()
-        .url("https://data.alpaca.markets/v2/stocks/bars?symbols=AAPL%2CAMZN%2CMSFT%2CNVDA%2CMETA&timeframe=1W&start=2024-08-01&end=2025-08-21&limit=1000&adjustment=raw&feed=sip&sort=asc")
+        .url("https://data.alpaca.markets/v2/stocks/bars?symbols=AAPL%2CAMZN%2CMSFT%2CNVDA%2CMETA&timeframe=15Min&start=2025-08-25&limit=10000&adjustment=raw&feed=sip&sort=asc")
         .get()
                 .addHeader("accept", "application/json")
                 .header("APCA-API-KEY-ID", API_KEY)

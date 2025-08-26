@@ -2,6 +2,7 @@ package com.bbapi.money_api.helper_classes;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -67,7 +68,10 @@ public class NetWorthCalculator {
                 }
                 netWorthService.addNetWorth(new NetWorth(LocalDateTime.ofInstant(i.toInstant(), ZoneId.systemDefault()), currentNetWorth));
                 // logger.info(groupedByTicker.toString());
-                i.add(Calendar.WEEK_OF_YEAR, 1);
+                if(ChronoUnit.DAYS.between(i.toInstant(), currentDate.toInstant())<2){i.add(Calendar.MINUTE, 15);}
+                else if(ChronoUnit.DAYS.between(i.toInstant(), currentDate.toInstant())<7){i.add(Calendar.HOUR, 4);}
+                else if(ChronoUnit.DAYS.between(i.toInstant(), currentDate.toInstant())<30){i.add(Calendar.DAY_OF_YEAR, 1);}
+                else{ i.add(Calendar.DAY_OF_YEAR, 7); }
             } while (i.before(currentDate));
             
             
