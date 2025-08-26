@@ -18,6 +18,13 @@ register('/', () => `
             <h5 class="m-0 me-2">Net Worth History</h5>
             <small class="text-muted">Financial performance over time</small>
           </div>
+          <div id="toolbar">
+            <button id="renderNetWorth_1d" class="btn btn-sm btn-outline-secondary">1D</button>
+            <button id="renderNetWorth_1w" class="btn btn-sm btn-outline-secondary">1W</button>
+            <button id="renderNetWorth_1m" class="btn btn-sm btn-outline-secondary">1M</button>
+            <button id="renderNetWorth_3m" class="btn btn-sm btn-outline-secondary">3M</button>
+            <button id="renderNetWorth_1y" class="btn btn-sm btn-outline-secondary">1Y</button>
+          </div>
         </div>
         <div class="card-body">
           <div id="netWorthChart"></div>
@@ -260,11 +267,14 @@ async function renderHistoryTable(searchTicker = '') {
   }
 }
 
-async function renderNetWorth() {
+async function renderNetWorth(range = '1y') {
   try {
     const response = await fetch("http://localhost:8080/netWorth");
     const data = await response.json();
-
+    console.log(data.map(row => ({
+      x: new Date(row.calculatedAt).getTime(),
+      y: row.amount/100
+    })));
     const options = {
       series: [{
         name: 'Net Worth',
@@ -350,11 +360,41 @@ async function renderNetWorth() {
 
     // Clean up any existing chart
     const chartElement = document.getElementById('netWorthChart');
+    document.getElementById('renderNetWorth_1d')?.addEventListener('click', () => renderNetWorth('1d'));
+    document.getElementById('renderNetWorth_1w')?.addEventListener('click', () => renderNetWorth('1w'));
+    document.getElementById('renderNetWorth_1m')?.addEventListener('click', () => renderNetWorth('1m'));
+    document.getElementById('renderNetWorth_3m')?.addEventListener('click', () => renderNetWorth('3m'));
+    document.getElementById('renderNetWorth_1y')?.addEventListener('click', () => renderNetWorth('1y'));
     chartElement.innerHTML = '';
 
     // Create new ApexCharts instance
     const chart = new ApexCharts(chartElement, options);
     chart.render();
+    const new_data = data.map(row => ({
+      x: new Date(row.calculatedAt).getTime(),
+      y: row.amount/100
+    }))
+    const end = new Date(new_data[new_data.length - 1].x);
+    let start;
+    switch (range) {
+      case '1d':
+        start = new Date(end.getTime() - 1 * 24 * 60 * 60 * 1000);
+        break;
+      case '1w':
+        start = new Date(end.getTime() - 7 * 24 * 60 * 60 * 1000);
+        break;
+      case '1m':
+        start = new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000);
+        break;
+      case '3m':
+        start = new Date(end.getTime() - 90 * 24 * 60 * 60 * 1000);
+        break;
+      case '1y':
+        start = new Date(end.getTime() - 365 * 24 * 60 * 60 * 1000);
+        break;
+    }
+
+    chart.zoomX(start.getTime(), end.getTime());
 
   } catch (error) {
     console.error('Error rendering net worth chart:', error);
