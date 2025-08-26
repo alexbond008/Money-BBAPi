@@ -656,7 +656,7 @@ async function renderHoldingsPieChart() {
         theme: 'dark',
         y: {
           formatter: function(value) {
-            return '$' + value.toFixed(2) + ' (' + (value * 100 / totalValue).toFixed(1) + '%)';
+            return '$' + value.toFixed(2) + ' (' + (value * 10000 / totalValue).toFixed(2) + '%)';
           }
         }
       }
