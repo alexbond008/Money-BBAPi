@@ -65,13 +65,18 @@
             <a class="nav-item nav-link px-0 me-xl-4" href="#"><i class="bx bx-menu bx-sm"></i></a>
           </div>
           <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-            <div class="navbar-nav align-items-center">
+            <div class="navbar-nav align-items-center mx-auto">
               <!-- <div class="nav-item d-flex align-items-center"><i class="bx bx-search fs-4 me-2"></i>
                 <input id="globalSearch" type="text" class="form-control border-0 shadow-none" placeholder="Search… (accounts, tickers, tx)" />
               </div> -->
               <div class="nav-item d-flex align-items-center">
-                <span id="cashBar" class="form-control border-0 shadow-none">Loading cash data...</span>
-                <span id="netWorthBar" class="form-control border-0 shadow-none">Loading cash data...</span>
+                <span id="cashBar" class="form-control border-0 shadow-none" style="white-space: nowrap; font-size: 28px; font-weight: bold;">Loading...</span>
+                <div width="20px" style=" flex: 0 0 10%;"></div>
+                <span id="netWorthBar" class="form-control border-0 shadow-none" style="white-space: nowrap; font-size: 28px; font-weight: bold;"></span>
+                <div width="20px" style=" flex: 0 0 10%;"></div>
+                <span id="profitBar" class="form-control border-0 shadow-none" style="white-space: nowrap; font-size: 28px; font-weight: bold;"></span>
+                <div width="20px" style=" flex: 0 0 5%;"></div>
+                <div id="profitPercentageBar" class="form-control border-0 shadow-none" style="white-space: nowrap; font-size: 28px; font-weight: bold;"></div>
               </div>
             </div>
             <ul class="navbar-nav flex-row align-items-center ms-auto">

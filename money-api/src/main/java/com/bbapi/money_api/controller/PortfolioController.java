@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bbapi.money_api.helper_classes.PortfolioItem;
 import com.bbapi.money_api.service.PortfolioService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @CrossOrigin
@@ -26,5 +28,16 @@ public class PortfolioController {
     public ResponseEntity<List<PortfolioItem>> getAllPortfolioItems() {
         return ResponseEntity.ok(portfolioService.getAllPortfolioItems());
     }
+
+    @GetMapping("/profit")
+    public ResponseEntity<Integer> getProfit() {
+        return ResponseEntity.ok(portfolioService.getPortfolioProfit());
+    }
+
+    @GetMapping("/profitPercentage")
+    public ResponseEntity<Double> getProfitPercentage() {
+        return ResponseEntity.ok(portfolioService.getPortfolioProfitPercentage());
+    }
+    
     
 }

@@ -88,6 +88,22 @@ export async function fetchAndDisplayCash() {
     const netWorthData = await netWorthResp.json();
     const netWorthEl = document.getElementById('netWorthBar');
     if (netWorthEl) netWorthEl.textContent = netWorthData ? `Net Worth: ${formatCents(netWorthData.amount)}` : 'No net worth data';
+
+    // Fetching profit data
+    const profitResp = await fetch('/portfolio/profit');
+    if (!profitResp.ok) throw new Error('profit fetch ' + profitResp.status);
+    const profitData = await profitResp.json();
+    const profitEl = document.getElementById('profitBar');
+    if (profitEl) profitEl.textContent = profitData ? `Profit: ${formatCents(profitData)}` : 'No profit data';
+    profitEl.className = ` ${profitData<0?'text-danger':'text-success'}`;
+
+    // Fetching profit Percentage data
+    const profitPercentageResp = await fetch('/portfolio/profitPercentage');
+    if (!profitPercentageResp.ok) throw new Error('profitPercentage fetch ' + profitPercentageResp.status);
+    const profitPercentageData = await profitPercentageResp.json();
+    const profitPercentageEl = document.getElementById('profitPercentageBar');
+    if (profitPercentageEl) profitPercentageEl.textContent = profitPercentageData ? ` ${(profitPercentageData/100).toFixed(2)}%` : 'No profit data';
+    profitPercentageEl.className += ` ${profitPercentageData<0?'text-danger':'text-success'}`;
     
   } catch (e) {
     console.error(e);

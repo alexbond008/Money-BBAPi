@@ -328,6 +328,16 @@ export async function onViewRendered(path){
         const num = netEl.textContent.replace(/[^\d.]/g,'');
         if (num) netEl.textContent = 'Net Worth: ' + formatCents(Math.round(parseFloat(num)*100));
       }
+      const profitEl = document.getElementById('profitBar');
+      if (profitEl && profitEl.textContent.match(/\d/)){
+        const num = profitEl.textContent.replace(/[^\d.]/g,'');
+        if (num) profitEl.textContent = 'Profit: ' + formatCents(Math.round(parseFloat(num)*100));
+      }
+      const profitPercentageEl = document.getElementById('profitPercentageBar');
+      if (profitPercentageEl && profitPercentageEl.textContent.match(/\d/)){
+        const num = profitPercentageEl.textContent.replace(/[^\d.]/g,'');
+        if (num) profitPercentageEl.textContent = 'Profit percentage: ' + formatCents(Math.round(parseFloat(num)*100));
+      }
       setTimeout(()=>alertBox.classList.add('d-none'), 2000);
     });
     document.getElementById('resetSettings').addEventListener('click', ()=>{
