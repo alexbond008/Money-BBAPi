@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Money-BBAPi — Admin</title>
   <meta name="description" content="Money-BBAPi admin UI starter powered by Sneat Bootstrap 5" />
+  <!-- ...inside <head> BEFORE loading external CSS add this tiny inline script... -->
+  <script>
+    (function(){
+      try{
+        const s = JSON.parse(localStorage.getItem('appSettings')||'{}');
+        if (s.theme === 'dark'){
+          document.documentElement.classList.remove('light-style');
+          document.documentElement.classList.add('dark-style');
+          document.addEventListener('DOMContentLoaded', ()=>document.body.classList.add('dark-mode'));
+        }
+      }catch(e){}
+    })();
+  </script>
   <!-- Sneat Free (via jsDelivr) -->
   <!-- NOTE: If you purchase PRO, replace these with PRO assets -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
@@ -66,6 +79,9 @@
               <li class="nav-item me-2">
                 <button class="btn btn-primary btn-sm" id="depositCash" data-bs-toggle="modal" data-bs-target="#depositModal">
                   <i class='bx bx-plus me-1'></i>Deposit Cash
+                </button>
+                <button class="btn btn-secondary btn-sm" id ="withdrawCash" data-bs-toggle="modal" data-bs-target="#withdrawModal">
+                  <i class='bx bx-minus me-1'></i>Withdraw Cash
                 </button>
               </li>
               
@@ -131,6 +147,45 @@
     </div>
   </div>
 
+  <div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="withdrawModalLabel">Withdraw Cash</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="withdrawForm" class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Amount</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input 
+                  class="form-control" 
+                  type="text" 
+                  name="amount" 
+                  required 
+                  pattern="^\$?\d+(\.\d{2})?$"
+                  placeholder="0.00"
+                />
+              </div>
+              <div class="form-text">Enter amount in dollars (e.g. 14.00)</div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" form="withdrawForm" class="btn btn-primary">
+            <i class='bx bx-save me-1'></i>Save
+          </button>
+        </div>
+        <div class="alert alert-success d-none m-3" id="withdrawSuccess">Withdraw saved successfully!</div>
+        <div class="alert alert-danger d-none m-3" id="withdrawError">Failed to save withdraw</div>
+      </div>
+    </div>
+  </div>
+  
+
   <!-- Offcanvas: Create Transaction (example of endpoint wiring) -->
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasTx" aria-labelledby="offcanvasTxLabel">
     <div class="offcanvas-header">
@@ -189,3 +244,4 @@
   </script>
 </body>
 </html>
+``` 

@@ -1,5 +1,5 @@
 // Simplified: remove unused portfolio/recent widgets; focus on history table
-import { fetchHistoryItems, fetchPortfolio, fetchAndDisplayCash, fetchStockPrices } from './api.js';
+import { fetchHistoryItems, fetchPortfolio, fetchAndDisplayCash, fetchStockPrices, loadSettings, saveSettings, applyTheme, formatCents } from './api.js';
 import * as chartlib from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.6/+esm';
 
 const bootstrap = window.bootstrap;
@@ -183,6 +183,40 @@ register('/holdings', () => `
   </div>
 `);
 
+// Add the Settings route registration
+register('/settings', () => {
+  const s = loadSettings();
+  return `
+    <div class="card">
+      <div class="card-header"><h5 class="mb-0">Settings</h5></div>
+      <div class="card-body">
+        <form id="settingsForm" class="row g-4">
+          <div class="col-md-6">
+            <label class="form-label">Main Currency</label>
+            <select class="form-select" name="currency" required>
+              ${['USD','EUR','GBP','JPY','CHF','AUD','CAD','SEK','NOK','DKK']
+                .map(c=>`<option value="${c}" ${c===s.currency?'selected':''}>${c}</option>`).join('')}
+            </select>
+            <div class="form-text">Used for displaying amounts.</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Theme</label>
+            <select class="form-select" name="theme">
+              <option value="light" ${s.theme==='light'?'selected':''}>Light</option>
+              <option value="dark" ${s.theme==='dark'?'selected':''}>Dark</option>
+            </select>
+            <div class="form-text">Switch UI appearance.</div>
+          </div>
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class='bx bx-save me-1'></i>Save</button>
+            <button type="button" id="resetSettings" class="btn btn-outline-secondary">Reset</button>
+          </div>
+        </form>
+        <div class="alert alert-success d-none mt-3" id="settingsSaved">Settings saved.</div>
+      </div>
+    </div>`;
+});
+
 // Update the onViewRendered function to include portfolio search
 export async function onViewRendered(path){
   if (path === '/transactions') {
@@ -269,6 +303,39 @@ export async function onViewRendered(path){
   if (path === '/') renderNetWorth();
   if (path === '/holdings') renderHoldingsPieChart();
   if (path === '/stocks') renderStockPrices();
+  if (path === '/settings') {
+    const form = document.getElementById('settingsForm');
+    const alertBox = document.getElementById('settingsSaved');
+    form.addEventListener('submit', e=>{
+      e.preventDefault();
+      const fd = new FormData(form);
+      const newSettings = {
+        currency: fd.get('currency'),
+        theme: fd.get('theme')
+      };
+      saveSettings(newSettings);
+      applyTheme(newSettings.theme);
+      alertBox.classList.remove('d-none');
+      // Refresh top bars if amounts already loaded
+      const cashEl = document.getElementById('cashBar');
+      if (cashEl && cashEl.textContent.match(/\d/)){
+        // crude attempt: reparse number from existing
+        const num = cashEl.textContent.replace(/[^\d.]/g,'');
+        if (num) cashEl.textContent = 'Cash: ' + formatCents(Math.round(parseFloat(num)*100));
+      }
+      const netEl = document.getElementById('netWorthBar');
+      if (netEl && netEl.textContent.match(/\d/)){
+        const num = netEl.textContent.replace(/[^\d.]/g,'');
+        if (num) netEl.textContent = 'Net Worth: ' + formatCents(Math.round(parseFloat(num)*100));
+      }
+      setTimeout(()=>alertBox.classList.add('d-none'), 2000);
+    });
+    document.getElementById('resetSettings').addEventListener('click', ()=>{
+      saveSettings({ currency:'USD', theme:'light' });
+      applyTheme('light');
+      location.reload();
+    });
+  }
 }
 
 // Render function
@@ -672,6 +739,73 @@ document.getElementById('depositForm')?.addEventListener('submit', async (e) => 
   } catch (error) {
     console.error('Error making deposit:', error);
     const errorAlert = document.getElementById('depositError');
+    errorAlert.classList.remove('d-none');
+    setTimeout(() => errorAlert.classList.add('d-none'), 3000);
+  }
+});
+
+// Show withdraw modal
+document.getElementById('withdrawCash')?.addEventListener('click', () => {
+  const modal = new bootstrap.Modal(document.getElementById('withdrawModal'));
+  modal.show();
+});
+
+// Handle withdraw form submit
+document.getElementById('withdrawForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const amountStr = formData.get('amount').replace('$', '');
+  
+  try {
+    // Validate amount format
+    if (!/^\d+(\.\d{2})?$/.test(amountStr)) {
+      throw new Error('Invalid amount format');
+    }
+    
+    // Convert to cents
+    const amountInCents = Math.round(parseFloat(amountStr) * 100);
+    
+    // Validate positive (user must enter >0)
+    if (amountInCents <= 0) {
+      throw new Error('Amount must be positive');
+    }
+
+    // For withdraw, price is negative
+    const response = await fetch('http://localhost:8080/historyItem', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        price: -amountInCents,   // negative for withdraw
+        ticker: 'MONEY',
+        quantity: 1
+      })
+    });
+
+    if (!response.ok) throw new Error('Withdraw failed');
+
+    // Show success message
+    const successAlert = document.getElementById('withdrawSuccess');
+    const errorAlert = document.getElementById('withdrawError');
+    successAlert.classList.remove('d-none');
+    errorAlert.classList.add('d-none');
+    
+    // Clear form and close modal
+    form.reset();
+    setTimeout(() => {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('withdrawModal'));
+      document.getElementsByClassName('modal-backdrop fade show')[0]?.remove();
+      modal.hide();
+      fetchAndDisplayCash(); // refresh balance
+      successAlert.classList.add('d-none');
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error making withdraw:', error);
+    const errorAlert = document.getElementById('withdrawError');
     errorAlert.classList.remove('d-none');
     setTimeout(() => errorAlert.classList.add('d-none'), 3000);
   }

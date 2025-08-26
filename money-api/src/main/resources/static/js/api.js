@@ -32,6 +32,47 @@ export function mapHistoryItem(raw){
   };
 }
 
+// Settings persistence (localStorage)
+const SETTINGS_KEY = 'appSettings';
+const DEFAULT_SETTINGS = { currency: 'USD', theme: 'light' };
+const CURRENCY_SYMBOLS = { USD:'$', EUR:'€', GBP:'£', JPY:'¥', CHF:'Fr', AUD:'A$', CAD:'C$', SEK:'kr', NOK:'kr', DKK:'kr' };
+
+export function loadSettings(){
+  try { return { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}') }; }
+  catch { return { ...DEFAULT_SETTINGS }; }
+}
+
+export function saveSettings(s){
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+}
+
+export function applyTheme(theme){
+  const html = document.documentElement;
+  if (theme === 'dark'){
+    html.classList.remove('light-style');
+    html.classList.add('dark-style');
+    document.body.classList.add('dark-mode');
+  } else {
+    html.classList.add('light-style');
+    html.classList.remove('dark-style');
+    document.body.classList.remove('dark-mode');
+  }
+}
+
+function getCurrencySymbol(){
+  const s = loadSettings();
+  return CURRENCY_SYMBOLS[s.currency] || s.currency + ' ';
+}
+
+// Replace / extend existing formatCents
+export function formatCents(v){
+  if (v == null) return '-';
+  return getCurrencySymbol() + (v/100).toFixed(2);
+}
+
+// On module load apply stored theme early
+applyTheme(loadSettings().theme);
+
 export async function fetchAndDisplayCash() {
   try {
     const cashResp = await fetch('/cash/latest');
@@ -55,11 +96,6 @@ export async function fetchAndDisplayCash() {
     const netWorthEl = document.getElementById('netWorthBar');
     if (netWorthEl) netWorthEl.textContent = 'Net worth load error';
   }
-}
-
-function formatCents(v){
-  if (v == null) return '-';
-  return '$' + (v/100).toFixed(2);
 }
 
 // Auto-run once DOM ready
