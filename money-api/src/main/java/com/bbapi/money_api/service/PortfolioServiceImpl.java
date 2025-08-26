@@ -19,10 +19,12 @@ public class PortfolioServiceImpl implements PortfolioService {
     @Autowired
     private HistoryItemRepository historyItemRepository;
     private StockPriceRepository stockPriceRepository;
+    private NetWorthService netWorthService;
 
     private Logger logger = LoggerFactory.getLogger(PortfolioServiceImpl.class);
 
-    public PortfolioServiceImpl(HistoryItemRepository historyItemRepository, StockPriceRepository stockPriceRepository) {
+    public PortfolioServiceImpl(HistoryItemRepository historyItemRepository, StockPriceRepository stockPriceRepository, NetWorthService netWorthService) {
+        this.netWorthService = netWorthService;
         this.stockPriceRepository = stockPriceRepository;
         this.historyItemRepository = historyItemRepository;
     }
@@ -56,6 +58,22 @@ public class PortfolioServiceImpl implements PortfolioService {
             }
         }
         return portfolioItems;
+    }
+
+    @Override
+    public Integer getPortfolioProfit() {
+        Integer netWorth = netWorthService.getLatestNetWorth().getAmount();
+        Integer buyPrice = getAllPortfolioItems().stream().mapToInt(item -> item.getAvgPrice() * item.getQuantity()).sum();
+        return netWorth - buyPrice;
+
+    }
+
+    @Override
+    public Double getPortfolioProfitPercentage() {
+        Integer netWorth = netWorthService.getLatestNetWorth().getAmount();
+        Integer buyPrice = getAllPortfolioItems().stream().mapToInt(item -> item.getAvgPrice() * item.getQuantity()).sum();
+        Double profitPercentage = ((double)(netWorth - buyPrice) / buyPrice) * 100;
+        return profitPercentage * 100.0;
     }
     
 }
