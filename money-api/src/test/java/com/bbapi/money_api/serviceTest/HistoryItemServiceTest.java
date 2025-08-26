@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Calendar;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -104,6 +105,43 @@ class HistoryItemServiceTest {
         historyItemService.deleteHistoryItem(id);
         HistoryItem after = historyItemService.getHistoryItemById(CASH_TICKER, twoDaysAgo);
         assertThat(after).isNull();
+    }
+
+    @Test
+    void contextLoads() {
+        assertTrue(true);
+    }
+
+    @Test
+    void addAndFetchDoesNotThrow() {
+        HistoryItem h = new HistoryItem("DUMMY", 1, 100, new Date());
+        historyItemService.addHistoryItem(h);
+        historyItemService.getAllHistoryItems();
+        assertTrue(true);
+    }
+
+    @Test
+    void getByIdSafe() {
+        historyItemService.getHistoryItemById("NOPE", new Date());
+        assertTrue(true);
+    }
+
+    @Test
+    void deleteSafe() {
+        historyItemService.getAllHistoryItems().forEach(x -> {
+            historyItemService.deleteHistoryItem(
+                new com.bbapi.money_api.entity.HistoryItemId(x.getTicker(), x.getTimestamp())
+            );
+        });
+        assertTrue(true);
+    }
+
+    @Test
+    void cashQueriesSafe() {
+        historyItemService.getAllCashHistoryItems();
+        historyItemService.getAllCashHistoryItemsOlderThan(new Date());
+        historyItemService.getAllHistoryItemsOlderThan(new Date());
+        assertTrue(true);
     }
 
     // Helper to build Date offsets from now (truncating milliseconds for equality)
