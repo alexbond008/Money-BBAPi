@@ -538,5 +538,68 @@ async function renderHoldingsPieChart() {
   }
 }
 
+// Add this after other initialization code
+document.getElementById('depositCash')?.addEventListener('click', () => {
+  const modal = new bootstrap.Modal(document.getElementById('depositModal'));
+  modal.show();
+});
+
+document.getElementById('depositForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const amountStr = formData.get('amount').replace('$', '');
+  
+  try {
+    // Validate amount format
+    if (!/^\d+(\.\d{2})?$/.test(amountStr)) {
+      throw new Error('Invalid amount format');
+    }
+    
+    // Convert to cents
+    const amountInCents = Math.round(parseFloat(amountStr) * 100);
+    
+    // Validate positive amount
+    if (amountInCents <= 0) {
+      throw new Error('Amount must be positive');
+    }
+
+    const response = await fetch('http://localhost:8080/historyItem', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        price: amountInCents,
+        ticker: 'MONEY',
+        quantity: 1
+      })
+    });
+
+    if (!response.ok) throw new Error('Deposit failed');
+
+    // Show success message
+    const successAlert = document.getElementById('depositSuccess');
+    const errorAlert = document.getElementById('depositError');
+    successAlert.classList.remove('d-none');
+    errorAlert.classList.add('d-none');
+    
+    // Clear form and close modal
+    form.reset();
+    setTimeout(() => {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('depositModal'));
+      modal.hide();
+      successAlert.classList.add('d-none');
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error making deposit:', error);
+    const errorAlert = document.getElementById('depositError');
+    errorAlert.classList.remove('d-none');
+    setTimeout(() => errorAlert.classList.add('d-none'), 3000);
+  }
+});
+
 // Default initial route if no hash
 if (!location.hash) location.hash = '#/transactions';
