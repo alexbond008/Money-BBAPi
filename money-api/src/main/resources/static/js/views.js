@@ -112,6 +112,56 @@ register('/portfolios', () => `
   </div>
 </div>
 
+
+
+ <!-- sell Portfolio Modal -->
+<div class="modal fade" id="sellPortfolioModal" tabindex="-1" aria-labelledby="sellPortfolioModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="sellPortfolioForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sellPortfolioModalLabel">Sell Stock</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+          <!-- Stock Symbol -->
+          <div class="mb-3">
+            <label for="buyTicker" class="form-label">Ticker</label>
+            <input type="text" class="form-control" id="buyTicker" name="ticker" placeholder="e.g. AAPL" required>
+          </div>
+
+          <!-- Shares -->
+          <div class="mb-3">
+            <label for="buyQuantity" class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="buyQuantity" name="quantity" min="1" required>
+          </div>
+
+          <!-- Price -->
+          <div class="mb-3">
+            <label for="buyPrice" class="form-label">Price</label>
+            <input type="number" class="form-control" id="buyPrice" name="price" step="0.01" min="0.01" required>
+          </div>
+
+          <!-- Alerts -->
+          <div id="buyPortfolioSuccess" class="alert alert-success d-none" role="alert">
+            Purchase successful!
+          </div>
+          <div id="buyPortfolioError" class="alert alert-danger d-none" role="alert">
+            Error while buying stock.
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Sell</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
       </div>
     </div>
     <div class="table-responsive">
@@ -354,6 +404,7 @@ export async function onViewRendered(path){
       const searchInput = document.getElementById('portfolioSearch');
       renderPortfolio(searchInput?.value.trim() || '');
     }, { once: true });
+
     // Portfolio ##########################################################################################
 
 // Add this after other initialization code
@@ -423,6 +474,78 @@ document.getElementById('buyPortfolioForm')?.addEventListener('submit', async (e
     // setTimeout(() => errorAlert.classList.add('d-none'), 3000);
   }
 });
+
+// Sell Portfolio #############################################################
+// Add this after other initialization code
+document.getElementById('sellPortfolio')?.addEventListener('click', () => {
+  const modal = new bootstrap.Modal(document.getElementById('sellPortfolioModal'));
+  modal.show();
+});
+
+document.getElementById('sellPortfolioForm')?.addEventListener('submit', async (e) => {
+  console.log('Sell Hejjjjj')
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const ticker = formData.get('ticker').toUpperCase().trim();
+  var quantity = parseInt(formData.get('quantity'), 10);
+  const price = formData.get('price').replace('$', '');
+  
+  try {
+    // Validate amount format
+    if (!/^\d+(\.\d{2})?$/.test(price)) {
+      throw new Error('Invalid amount format');
+    }
+    
+    // Convert to cents
+    const amountInCents = Math.round(parseFloat(price) * 100);
+    
+    // Validate positive amount
+    if (amountInCents <= 0) {
+      throw new Error('Amount must be positive');
+    }
+
+    quantity = 0-quantity; // Negate quantity for selling
+    console.log('Selling', quantity, 'of', ticker, 'at', amountInCents, 'cents each');
+    const response = await fetch('http://localhost:8080/historyItem', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        timestamp: new Date().toISOString(),
+        ticker: ticker,
+        quantity: quantity,
+        price: amountInCents
+      })
+    });
+
+    if (!response.ok) throw new Error('Portfolio transaction failed');
+
+    // Show success message
+    const successAlert = document.getElementById('portfolioSuccess');
+    const errorAlert = document.getElementById('portfolioError');
+    // successAlert.classList.remove('d-none');
+    // errorAlert.classList.add('d-none');
+    
+    // Clear form and close modal
+    form.reset();
+    setTimeout(() => {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('sellPortfolioModal'));
+      document.getElementsByClassName('modal-backdrop fade show')[0]?.remove();
+      modal.hide();
+      fetchAndDisplayCash();
+      // successAlert.classList.add('d-none');
+    }, 2000);
+
+  } catch (error) {
+    console.error('Error making portfolio transaction:', error);
+    const errorAlert = document.getElementById('portfolioError');
+    // errorAlert.classList.remove('d-none');
+    // setTimeout(() => errorAlert.classList.add('d-none'), 3000);
+  }
+});
+
   }
   if (path === '/') renderNetWorth();
   if (path === '/holdings') renderHoldingsPieChart();

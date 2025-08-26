@@ -69,13 +69,13 @@ document.getElementById('buyPortfolio')?.addEventListener('click', () => {
   });
   
   // Show withdraw modal
-  document.getElementById('selPortfolio')?.addEventListener('click', () => {
-    const modal = new bootstrap.Modal(document.getElementById('withdrawModal'));
+  document.getElementById('sellPortfolio')?.addEventListener('click', () => {
+    const modal = new bootstrap.Modal(document.getElementById('sellPortfolioModal'));
     modal.show();
   });
   
   // Handle withdraw form submit
-  document.getElementById('withdrawForm')?.addEventListener('submit', async (e) => {
+  document.getElementById('sellPortfolioForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);

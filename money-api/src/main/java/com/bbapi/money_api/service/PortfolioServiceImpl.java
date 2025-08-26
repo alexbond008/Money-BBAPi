@@ -46,8 +46,8 @@ public class PortfolioServiceImpl implements PortfolioService {
                         totalQuantity += item.getQuantity();
                         totalSpent += item.getPrice() * item.getQuantity();
                     } else if (item.getQuantity()<0) {
-                        totalQuantity -= item.getQuantity();
-                        totalSpent -= item.getPrice() * item.getQuantity();
+                        totalQuantity += item.getQuantity();
+                        totalSpent += item.getPrice() * item.getQuantity();
                     }
                 }
             }
