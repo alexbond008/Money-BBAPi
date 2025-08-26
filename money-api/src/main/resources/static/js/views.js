@@ -589,6 +589,7 @@ document.getElementById('depositForm')?.addEventListener('submit', async (e) => 
     form.reset();
     setTimeout(() => {
       const modal = bootstrap.Modal.getInstance(document.getElementById('depositModal'));
+      document.getElementsByClassName('modal-backdrop fade show')[0]?.remove();
       modal.hide();
       successAlert.classList.add('d-none');
     }, 2000);
