@@ -255,7 +255,7 @@ async function renderHistoryTable(searchTicker = '') {
       return `
         <tr>
           <td>${date}</td>
-          <td>${r.ticker}</td>
+          <td>${r.ticker == 'MONEY' ? 'CASH TRANSFER' : r.ticker}</td>
           <td class="text-end ${r.quantity<0?'text-danger':'text-success'}">${r.quantity}</td>
           <td class="text-end">${pricePerShare}</td>
         </tr>`;
