@@ -712,17 +712,20 @@ INSERT INTO stock_price (price, timestamp, ticker) VALUES (18015, TIMESTAMP'2025
 INSERT INTO stock_price (price, timestamp, ticker) VALUES (18013, TIMESTAMP'2025-08-26T08:30:00', 'NVDA');
 
 
-
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (21624, 100, TIMESTAMP'2024-08-14', 'NVDA');
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (21624, 100, TIMESTAMP'2024-08-05', 'AAPL');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22684, 20, TIMESTAMP'2024-08-12', 'AAPL');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (51624, 100, TIMESTAMP'2024-12-05', 'META');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (11624, 100, TIMESTAMP'2024-10-12', 'NVDA');
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22502, 100, TIMESTAMP'2025-07-07', 'AMZN');
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22602, -50, TIMESTAMP'2025-07-08', 'AMZN');
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22613, 100, TIMESTAMP'2025-07-14', 'AMZN');
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (22653, -50, TIMESTAMP'2025-07-15', 'AMZN');
 INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-07-21', 'AMZN');
-INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-07-29', 'META');
-INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-08-01', 'NVDA');
-INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (23144, 50, TIMESTAMP'2025-08-06', 'MSFT');
-INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (1000, 50, TIMESTAMP'2025-08-06', 'MONEY');
-INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (-2400, 129, TIMESTAMP'2025-08-11', 'MONEY');
-INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (400, 50, TIMESTAMP'2025-05-11', 'MONEY');
-INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (100, 50, TIMESTAMP'2025-03-11', 'MONEY');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (47144, 50, TIMESTAMP'2025-07-29', 'META');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (18144, 50, TIMESTAMP'2025-07-31', 'NVDA');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (51413, 50, TIMESTAMP'2025-08-01', 'MSFT');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (1000, 1, TIMESTAMP'2025-08-06', 'MONEY');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (-2400, 1, TIMESTAMP'2025-08-11', 'MONEY');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (400, 1, TIMESTAMP'2025-05-11', 'MONEY');
+INSERT INTO history_item (price, quantity, timestamp, ticker) VALUES (100, 1, TIMESTAMP'2025-03-11', 'MONEY');
